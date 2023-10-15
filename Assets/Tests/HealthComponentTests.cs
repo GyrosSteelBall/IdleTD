@@ -30,7 +30,7 @@ public class HealthComponentTests
         health.TakeDamage(10);
 
         // Assert
-        Assert.AreEqual(90, health.CurrentHealth);
+        Assert.AreEqual(90, health.GetCurrentHealth());
     }
 
     [Test]
@@ -43,7 +43,7 @@ public class HealthComponentTests
         health.Heal(10);
 
         // Assert
-        Assert.AreEqual(90, health.CurrentHealth);
+        Assert.AreEqual(90, health.GetCurrentHealth());
     }
 
     [Test]
@@ -53,7 +53,7 @@ public class HealthComponentTests
         health.Heal(10);
 
         // Assert
-        Assert.AreEqual(100, health.CurrentHealth);
+        Assert.AreEqual(100, health.GetCurrentHealth());
     }
 
     [Test]
@@ -63,7 +63,7 @@ public class HealthComponentTests
         health.SetMaxHealth(120);
 
         // Assert
-        Assert.AreEqual(120, health.MaxHealth);
+        Assert.AreEqual(120, health.GetMaxHealth());
     }
 
     [Test]
@@ -73,7 +73,7 @@ public class HealthComponentTests
         health.TakeDamage(100);  // Health is now 0
 
         // Assert
-        Assert.IsTrue(health.IsDead);
+        Assert.IsTrue(health.GetIsDead());
     }
 
     [Test]

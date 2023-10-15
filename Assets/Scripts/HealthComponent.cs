@@ -1,62 +1,75 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 using System;
 using UnityEngine;
 
 public class HealthComponent : MonoBehaviour
 {
+    private int maxHealth;
+    private int currentHealth;
+    private bool isDead;
+
     public event Action<int, int> OnHealthChanged;
 
-    public int MaxHealth { get; private set; }
-    public int CurrentHealth { get; private set; }
-    public bool IsDead { get; private set; }
+    public void SetMaxHealth(int value)
+    {
+        maxHealth = value;
+    }
+
+    public int GetMaxHealth()
+    {
+        return maxHealth;
+    }
+
+    public void SetCurrentHealth(int value)
+    {
+        int oldHealth = currentHealth;
+        currentHealth = value;
+        if (oldHealth != currentHealth)
+        {
+            OnHealthChanged?.Invoke(oldHealth, currentHealth);
+        }
+    }
+
+    public int GetCurrentHealth()
+    {
+        return currentHealth;
+    }
+
+    public void SetIsDead(bool value)
+    {
+        isDead = value;
+    }
+
+    public bool GetIsDead()
+    {
+        return isDead;
+    }
 
     public void TakeDamage(int damage)
     {
-        int oldHealth = CurrentHealth;
-        CurrentHealth = Mathf.Max(0, CurrentHealth - damage);
-        OnHealthChanged?.Invoke(oldHealth, CurrentHealth);
-        if (CurrentHealth <= 0)
+        int oldHealth = currentHealth;
+        SetCurrentHealth(Mathf.Max(0, currentHealth - damage));
+        if (currentHealth <= 0)
         {
-            IsDead = true;
+            SetIsDead(true);
         }
     }
 
     public void Heal(int amount)
     {
-        int oldHealth = CurrentHealth;
+        int oldHealth = currentHealth;
         // If heal amount is greater than max health, set HP to max health
-        if ((CurrentHealth + amount) >= MaxHealth)
+        if ((currentHealth + amount) >= maxHealth)
         {
-            CurrentHealth = MaxHealth;
+            SetCurrentHealth(maxHealth);
         }
         else
         {
-            CurrentHealth += amount;
+            SetCurrentHealth(currentHealth + amount);
         }
         // Trigger the event if health changed
-        if (oldHealth != CurrentHealth)
+        if (oldHealth != currentHealth)
         {
-            OnHealthChanged?.Invoke(oldHealth, CurrentHealth);
-        }
-    }
-
-    public void SetMaxHealth(int amount)
-    {
-        MaxHealth = amount;
-    }
-
-    public void SetCurrentHealth(int amount)
-    {
-        int oldHealth = CurrentHealth;
-        CurrentHealth = amount;
-        // Trigger the event if health changed
-        if (oldHealth != CurrentHealth)
-        {
-            OnHealthChanged?.Invoke(oldHealth, CurrentHealth);
+            OnHealthChanged?.Invoke(oldHealth, currentHealth);
         }
     }
 }
-
