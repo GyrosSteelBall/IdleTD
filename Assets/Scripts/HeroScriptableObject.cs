@@ -12,7 +12,7 @@ public class HeroScriptableObject : ScriptableObject
     public float attackSpeed, range, critChance, critDamage;
 
 
-    GameObject HeroPrefab  = (GameObject) Resources.Load("", typeof(GameObject))
+    GameObject HeroPrefab  = (GameObject) Resources.Load("", typeof(GameObject));
     
 
 
