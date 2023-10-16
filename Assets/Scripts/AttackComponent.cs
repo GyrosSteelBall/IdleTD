@@ -7,6 +7,17 @@ public class AttackComponent : MonoBehaviour
     [SerializeField] private int attackRange;
     [SerializeField] private string attackType;
     [SerializeField] private float criticalChance;
+    [SerializeField] private float criticalDamageMultiplier;
+
+    public void SetCriticalDamageMultiplier(float multiplier)
+    {
+        criticalDamageMultiplier = multiplier;
+    }
+
+    public float getCriticalDamageMultiplier()
+    {
+        return criticalDamageMultiplier;
+    }
 
     public void SetAttackDamage(int damage)
     {

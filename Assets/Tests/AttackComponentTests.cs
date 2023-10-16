@@ -57,6 +57,13 @@ public class AttackComponentTests : MonoBehaviour
     }
 
     [Test]
+    public void CriticalDamageMultiplier_Is_Set_Correctly()
+    {
+        attackComponent.SetCriticalDamageMultiplier(2.25f);
+        Assert.AreEqual(2.25f, attackComponent.getCriticalDamageMultiplier());
+    }
+
+    [Test]
     [TestCase("single", 10, 1.0f, 5, 0.1f)]
     [TestCase("aoe", 20, 1.5f, 10, 0.2f)]
     [TestCase("chaining", 15, 1.2f, 7, 0.15f)]
