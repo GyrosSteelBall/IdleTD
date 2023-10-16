@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8494051042512143553}
   - component: {fileID: 2248114094877922980}
   - component: {fileID: 4998544299021676264}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Chef
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -76,7 +76,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2537882373423050008, guid: 0fed1e9c4ee3c6248a4e9b7f80b45c6f, type: 3}
+  m_Sprite: {fileID: 2537882373423050008, guid: 0fed1e9c4ee3c6248a4e9b7f80b45c6f,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -159,7 +160,7 @@ Animator:
   m_GameObject: {fileID: 4707598915543346905}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cd614efe85f053f468b74e90bfecbba5, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
