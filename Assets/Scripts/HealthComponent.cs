@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class HealthComponent : MonoBehaviour
 {
-    private int maxHealth;
-    private int currentHealth;
+    [SerializeField] private int maxHealth;
+    [SerializeField] private int currentHealth;
     private bool isDead;
 
     public event Action<int, int> OnHealthChanged;

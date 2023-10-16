@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class AttackComponent : MonoBehaviour
 {
-    private int attackDamage;
-    private float attackSpeed;
-    private int attackRange;
-    private string attackType;
-    private float criticalChance;
+    [SerializeField] private int attackDamage;
+    [SerializeField] private float attackSpeed;
+    [SerializeField] private int attackRange;
+    [SerializeField] private string attackType;
+    [SerializeField] private float criticalChance;
 
     public void SetAttackDamage(int damage)
     {
