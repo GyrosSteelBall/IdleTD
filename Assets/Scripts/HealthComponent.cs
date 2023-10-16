@@ -1,21 +1,75 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class HealthComponent : MonoBehaviour
 {
-    //test
-    public int MaxHealth { get; private set; }
-    public int CurrentHealth { get; private set; }
+    [SerializeField] private int maxHealth;
+    [SerializeField] private int currentHealth;
+    private bool isDead;
 
-    public HealthComponent(int maxHealth, int currentHealth)
+    public event Action<int, int> OnHealthChanged;
+
+    public void SetMaxHealth(int value)
     {
-        MaxHealth = maxHealth;
-        CurrentHealth = currentHealth;
+        maxHealth = value;
+    }
+
+    public int GetMaxHealth()
+    {
+        return maxHealth;
+    }
+
+    public void SetCurrentHealth(int value)
+    {
+        int oldHealth = currentHealth;
+        currentHealth = value;
+        if (oldHealth != currentHealth)
+        {
+            OnHealthChanged?.Invoke(oldHealth, currentHealth);
+        }
+    }
+
+    public int GetCurrentHealth()
+    {
+        return currentHealth;
+    }
+
+    public void SetIsDead(bool value)
+    {
+        isDead = value;
+    }
+
+    public bool GetIsDead()
+    {
+        return isDead;
     }
 
     public void TakeDamage(int damage)
     {
-        CurrentHealth = Mathf.Max(0, CurrentHealth - damage);
+        int oldHealth = currentHealth;
+        SetCurrentHealth(Mathf.Max(0, currentHealth - damage));
+        if (currentHealth <= 0)
+        {
+            SetIsDead(true);
+        }
+    }
+
+    public void Heal(int amount)
+    {
+        int oldHealth = currentHealth;
+        // If heal amount is greater than max health, set HP to max health
+        if ((currentHealth + amount) >= maxHealth)
+        {
+            SetCurrentHealth(maxHealth);
+        }
+        else
+        {
+            SetCurrentHealth(currentHealth + amount);
+        }
+        // Trigger the event if health changed
+        if (oldHealth != currentHealth)
+        {
+            OnHealthChanged?.Invoke(oldHealth, currentHealth);
+        }
     }
 }
