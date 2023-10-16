@@ -1,18 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
-public class HeroScriptableObject : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+[CreateAssetMenu(fileName = "New Hero", menuName = "Hero")]
+public class HeroScriptableObject : ScriptableObject
+{
+    public string heroName;
+    public int attack, health;
+    public float attackSpeed, range, critChance, critDamage;
+
+
+    GameObject HeroPrefab  = (GameObject) Resources.Load("", typeof(GameObject))
+    
+
+
+
+
 }
