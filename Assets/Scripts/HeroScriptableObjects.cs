@@ -11,6 +11,7 @@ public class HeroScriptableObject : ScriptableObject
     public int attack, health, defense;
     public float attackSpeed, range, critChance, critDamage;
     public GameObject heroPrefab;
+    
     /*
     public AttackComponent attackComponent;
     public SpeedComponent speedComponent;
