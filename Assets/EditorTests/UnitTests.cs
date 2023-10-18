@@ -7,6 +7,7 @@ public class UnitTests
 {
     private Unit unit;
     private Enemy enemy;
+    private DeathEventHandlerTest handler;
 
     [SetUp]
     public void SetUp()
@@ -17,6 +18,8 @@ public class UnitTests
 
         GameObject enemyGameObject = new GameObject();
         enemy = enemyGameObject.AddComponent<Enemy>();
+
+        handler = new DeathEventHandlerTest();
     }
 
     [TearDown]
@@ -113,5 +116,43 @@ public class UnitTests
         float newAttackRange = 5.0f;
         unit.AttackRange = newAttackRange;
         Assert.AreEqual(newAttackRange, unit.AttackRange);
+    }
+
+    [Test]
+    public void Die_HealthIsZero_OnDeathEventIsFired()
+    {
+        // Arrange
+        unit.OnDeath += handler.HandleDeath;
+        unit.Health = 0;
+
+        // Act
+        unit.Die();
+
+        // Assert
+        Assert.IsTrue(handler.EventWasFired);
+    }
+
+    [Test]
+    public void Die_HealthIsGreaterThanZero_OnDeathEventIsNotFired()
+    {
+        // Arrange
+        unit.OnDeath += handler.HandleDeath;
+        unit.Health = 10;
+
+        // Act
+        unit.Die();
+
+        // Assert
+        Assert.IsFalse(handler.EventWasFired);
+    }
+
+    private class DeathEventHandlerTest
+    {
+        public bool EventWasFired { get; private set; } = false;
+
+        public void HandleDeath(Unit unit)  // Match the signature for Unit's OnDeath event
+        {
+            EventWasFired = true;
+        }
     }
 }

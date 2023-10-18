@@ -7,6 +7,8 @@ public class EnemyTests
 {
     private Enemy enemy;
     private Unit unit;
+    private DeathEventHandlerTest handler;
+
 
     [SetUp]
     public void SetUp()
@@ -14,6 +16,7 @@ public class EnemyTests
         // Assume Enemy and Unit are MonoBehaviour, and need a GameObject to be attached to.
         GameObject enemyGameObject = new GameObject();
         enemy = enemyGameObject.AddComponent<Enemy>();
+        handler = new DeathEventHandlerTest();
 
         GameObject unitGameObject = new GameObject();
         unit = unitGameObject.AddComponent<Unit>();
@@ -57,5 +60,43 @@ public class EnemyTests
         Vector3 newPosition = new Vector3(1, 2, 3);
         enemy.Position = newPosition;
         Assert.AreEqual(newPosition, enemy.Position);
+    }
+
+    [Test]
+    public void Die_HealthIsZero_OnDeathEventIsFired()
+    {
+        // Arrange
+        enemy.OnDeath += handler.HandleDeath;
+        enemy.Health = 0;
+
+        // Act
+        enemy.Die();
+
+        // Assert
+        Assert.IsTrue(handler.EventWasFired);
+    }
+
+    [Test]
+    public void Die_HealthIsGreaterThanZero_OnDeathEventIsNotFired()
+    {
+        // Arrange
+        enemy.OnDeath += handler.HandleDeath;
+        enemy.Health = 10;
+
+        // Act
+        enemy.Die();
+
+        // Assert
+        Assert.IsFalse(handler.EventWasFired);
+    }
+
+    private class DeathEventHandlerTest
+    {
+        public bool EventWasFired { get; private set; } = false;
+
+        public void HandleDeath(Enemy enemy)
+        {
+            EventWasFired = true;
+        }
     }
 }
