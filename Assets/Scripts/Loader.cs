@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public static class Loader {
+    //Asyncronously loading using Coroutines
+    //This means to loop a process but interuptting it to return flow of execution for a period of time
 
     private class LoadingMonoBehavior : MonoBehaviour { }
     //Dummy Class
@@ -18,7 +20,12 @@ public static class Loader {
     private static Action onLoaderCallBack;
     private static AsyncOperation loadingAsyncOperation;
     
-    public static void Load(Scene scene){
+    public static void Load(Scene scene)
+    {
+        GameObject loadingGameObject = new GameObject("Loading Game Object");
+        loadingGameObject.AddComponent<LoadingMonoBehavior>().StartCoroutine(LoadSceneAsync(scene));
+    }
+    public static void Load2(Scene scene){
         //Set the Loader callback action to our desired scene  
         onLoaderCallBack = () =>{
             GameObject loadingGameObject = new GameObject("Loading Game Object");
