@@ -384,7 +384,11 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -105541197
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_SortingLayer: 4
+=======
+  m_SortingLayer: 3
+>>>>>>> main
 =======
   m_SortingLayer: 3
 >>>>>>> main
@@ -3868,7 +3872,11 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1869315837
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_SortingLayer: 2
+=======
+  m_SortingLayer: 1
+>>>>>>> main
 =======
   m_SortingLayer: 1
 >>>>>>> main
@@ -8081,7 +8089,11 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -44025399
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_SortingLayer: 3
+=======
+  m_SortingLayer: 2
+>>>>>>> main
 =======
   m_SortingLayer: 2
 >>>>>>> main
@@ -12464,7 +12476,11 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -476223253
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_SortingLayer: 1
+=======
+  m_SortingLayer: 0
+>>>>>>> main
 =======
   m_SortingLayer: 0
 >>>>>>> main
