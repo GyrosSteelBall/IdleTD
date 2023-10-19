@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: 572d88ba930ccea408e925d15c02768a
   - enabled: 1
-    path: Assets/Scenes/SummoningScene.unity
+    path: Assets/Scenes/Summoning/SummoningScene.unity
     guid: 3bae67c6c3d89db478dee2157c6c2112
   - enabled: 1
     path: Assets/Scenes/Loading.unity
