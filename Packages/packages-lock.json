@@ -2,7 +2,7 @@
   "dependencies": {
     "com.unity.2d.animation": {
       "version": "9.0.3",
-      "depth": 0,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.2d.common": "8.0.1",
@@ -27,7 +27,7 @@
     },
     "com.unity.2d.common": {
       "version": "8.0.1",
-      "depth": 1,
+      "depth": 2,
       "source": "registry",
       "dependencies": {
         "com.unity.2d.sprite": "1.0.0",
