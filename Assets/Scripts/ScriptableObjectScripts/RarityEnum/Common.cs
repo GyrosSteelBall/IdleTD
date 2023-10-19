@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Common", menuName = "data/Common")]
-public class Common : ScriptableObject
+public class Common : ScriptableObject, UnitRarityInterface
 {
     [SerializeField]
     public List<string> heroArray;
@@ -15,5 +15,13 @@ public class Common : ScriptableObject
     {
         heroArray = new List<string>();
     }
+
+    public void rollUnit()
+    {
+
+    }
+  
+
+
 
 }

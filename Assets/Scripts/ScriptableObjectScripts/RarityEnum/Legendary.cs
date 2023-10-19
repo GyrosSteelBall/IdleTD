@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Legendary", menuName = "data/Legendary")]
-public class Legendary : ScriptableObject
+public class Legendary : ScriptableObject,UnitRarityInterface
 {
 
     [SerializeField]
@@ -17,4 +17,8 @@ public class Legendary : ScriptableObject
         heroArray = new List<string>();
     }
 
+    public void rollUnit()
+    {
+        throw new NotImplementedException();
+    }
 }

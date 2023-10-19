@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf0053d7f0cc179468a4beaad18644f4, type: 3}
   m_Name: Common
   m_EditorClassIdentifier: 
-  heroArray:
-  - Pirate
-  rarityPooling: 0
+  heroArray: []
+  rarityPooling: 20

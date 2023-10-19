@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class SummonHeroController : MonoBehaviour
 {
-    SummoningHeroDB heroDB;
+    SummonerController heroDB;
     // Start is called before the first frame update
     void Start()
     {
-        heroDB = Resources.Load<SummoningHeroDB>("ScriptableObjects/SummoningScene/HeroDB");
+        heroDB = Resources.Load<SummonerController>("ScriptableObjects/SummoningScene/HeroDB");
+        heroDB.Start();
         heroDB.formDB();
         heroDB.roll();
     }
