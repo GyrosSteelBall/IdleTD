@@ -13,8 +13,14 @@ MonoBehaviour:
   m_Name: Common
   m_EditorClassIdentifier: 
   heroArray:
-  - Necromancer
-  - Farmer
   - Bowman
+  - Chef
+  - CursedPumpkinHead
+  - DemonSamurai
+  - ElvishArcher
+  - Farmer
+  - Thief
+  - Pirate
+  - Spearman
   - Swordsman
   rarityPooling: 0

@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Uncommon
   m_EditorClassIdentifier: 
   heroArray:
-  - ZombieClaus
+  - Duelist
+  - CursedPumpkinHead
   - WitchDoctor
+  - ZombieClaus
   rarityPooling: 0

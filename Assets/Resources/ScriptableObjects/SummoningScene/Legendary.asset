@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Legendary
   m_EditorClassIdentifier: 
   heroArray:
-  - GrandMage
+  - RoyalKnight
   rarityPooling: 0

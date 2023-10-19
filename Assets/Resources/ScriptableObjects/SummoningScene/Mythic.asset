@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Mythic
   m_EditorClassIdentifier: 
   heroArray:
-  - RoyalKnight
+  - GrandMage
   rarityPooling: 0

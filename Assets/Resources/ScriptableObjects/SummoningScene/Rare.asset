@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Rare
   m_EditorClassIdentifier: 
   heroArray:
-  - FireMage
-  - IceMage
-  - SilverMage
-  - Chef
+  - Executioner
+  - NobleLongBowman
+  - Miner
   rarityPooling: 0
