@@ -13,6 +13,7 @@ public class SummonerController : ScriptableObject, SummonerControllerInterface
     public Mythic mythicObjectScript;
     public string rolledHero;
     public string lastRollRarity;
+    GameObject rolledHeroSpawn;
 
     public void RandomRarity()
     {
@@ -92,6 +93,15 @@ public class SummonerController : ScriptableObject, SummonerControllerInterface
             return true;
         }
         return false;
+    }
+
+    public void spawnHero()
+    {
+        string path = "HeroPrefabs/" + rolledHero + "/" + rolledHero;
+        rolledHeroSpawn = Instantiate(Resources.Load(path, typeof(GameObject))) as GameObject;
+        rolledHeroSpawn.transform.position = new Vector3((float)3.89, (float)20.35, (float).4);
+        SpriteRenderer sprite = rolledHeroSpawn.GetComponent<SpriteRenderer>();
+        sprite.sortingLayerName = "Layer 3";
     }
 
      public void determineRarity()

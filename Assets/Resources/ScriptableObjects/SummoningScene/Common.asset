@@ -14,13 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   heroArray:
   - Bowman
-  - Chef
-  - CursedPumpkinHead
-  - DemonSamurai
-  - ElvishArcher
   - Farmer
+  - Chef
+  - Miner
   - Thief
+  - PeasantBowman
   - Pirate
-  - Spearman
-  - Swordsman
-  rarityPooling: 0

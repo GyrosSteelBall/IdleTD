@@ -1,19 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Common", menuName = "data/Common")]
 public class Common : ScriptableObject, UnitRarityInterface
 {
-    [SerializeField]
-    public List<string> heroArray;
-    public int rarityPooling;
+
+    [SerializeField] private List<string> heroArray;
 
 
     public void Awake()
     {
-        heroArray = new List<string>();
+        
     }
 
     public string rollUnit()
@@ -22,7 +22,7 @@ public class Common : ScriptableObject, UnitRarityInterface
         int randomValue = UnityEngine.Random.Range(0, heroListSize);
         return heroArray[randomValue];
     }
-  
+
 
 
 

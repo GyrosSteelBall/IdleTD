@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Rare", menuName = "data/Rare")]
@@ -14,11 +15,18 @@ public class Rare : ScriptableObject, UnitRarityInterface
 
     public void Awake()
     {
-        heroArray = new List<string>();
+        
     }
 
     public string rollUnit()
     {
-       return heroArray[0];
+        int heroListSize = heroArray.Count;
+        int randomValue = UnityEngine.Random.Range(0, heroListSize);
+        return heroArray[randomValue];
+    }
+
+    public void OnValidate()
+    {
+        EditorUtility.SetDirty(this);
     }
 }

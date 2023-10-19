@@ -13,8 +13,14 @@ MonoBehaviour:
   m_Name: Uncommon
   m_EditorClassIdentifier: 
   heroArray:
-  - Duelist
-  - CursedPumpkinHead
-  - WitchDoctor
   - ZombieClaus
+  - WitchDoctor
+  - Spearman
+  - Swordsman
+  - MilitiaMen
+  - LifeDruid
+  - Duelist
+  - NobleLongBowman
+  - DemonSamurai
+  - ElvishArcher
   rarityPooling: 0

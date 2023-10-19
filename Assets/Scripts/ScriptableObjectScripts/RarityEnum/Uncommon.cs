@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Uncommon",menuName = "data/Uncommon")]
@@ -12,11 +13,16 @@ public class Uncommon : ScriptableObject, UnitRarityInterface
 
     public void Awake()
     {
-        heroArray = new List<string>();
+       
     }
 
     public string rollUnit()
     {
         return heroArray[0];
+    }
+
+    public void OnValidate()
+    {
+        EditorUtility.SetDirty(this);
     }
 }

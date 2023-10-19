@@ -10,6 +10,7 @@ public class SummonHeroController : MonoBehaviour
     {
         heroDB = Resources.Load<SummonerController>("ScriptableObjects/SummoningScene/SummonerController");
         heroDB.roll();
+        heroDB.spawnHero();
     }
 
     // Update is called once per frame
