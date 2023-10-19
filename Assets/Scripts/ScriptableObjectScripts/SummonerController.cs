@@ -6,15 +6,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="HeroDB",menuName ="data/SummoonHeroDB")]
 public class SummonerController : ScriptableObject, SummonerControllerInterface
 {
-    public List<string> heropool;
     public Common commonObjectScript;
     public Uncommon uncommonObjectScript;
     public Rare rareObjectScript;
     public Legendary legendaryObjectScript;
     public Mythic mythicObjectScript;
     public string rolledHero;
-    public int arraylength;
-    public bool isGenerated = false;
+    public string lastRollRarity;
 
     public void RandomRarity()
     {
@@ -23,18 +21,77 @@ public class SummonerController : ScriptableObject, SummonerControllerInterface
 
     public void roll()
     {
-
-        int total = heropool.Count;
-        arraylength = total;
-        int randomVal = Random.Range(0, total);
-        rolledHero = heropool[randomVal];
+        rollLogic();
+        
     }
 
-    public void Start()
+    public void rollLogic()
     {
-        isGenerated = false;
-        heropool = new List<string>();
+        bool isCommon = checkCommon();
+        if (isCommon) { rolledHero = commonObjectScript.rollUnit(); return; }
+        bool isUnCommon = checkUnCommon();
+        if (isUnCommon) { rolledHero = uncommonObjectScript.rollUnit(); return; }
+        int RareLegendaryMythicChance = Random.Range(0, 100);
+        bool isRare = checkRare(RareLegendaryMythicChance);
+        if(isRare) { rolledHero = rareObjectScript.rollUnit(); return; }
+        bool isLegendary = checkLegendary(RareLegendaryMythicChance);
+        if (isLegendary) { rolledHero = legendaryObjectScript.rollUnit(); return; }
+        bool isMythic = checkMythic(RareLegendaryMythicChance);
+        if (isMythic) { rolledHero = mythicObjectScript.rollUnit(); return; }
 
+
+        rolledHero = commonObjectScript.rollUnit();
+    }
+
+    public bool checkCommon()
+    {
+        int commonRollChance = Random.Range(0, 100);
+        if( commonRollChance <= 80)
+        {
+            lastRollRarity = "common";
+            return true;
+        }
+        return false;
+    }
+
+    public bool checkUnCommon()
+    {
+        int UncommonRollChance = Random.Range(0, 100);
+        if (UncommonRollChance <= 80)
+        {
+            lastRollRarity = "Uncommon";
+            return true;
+        }
+        return false;
+    }
+    public bool checkRare(int randVal)
+    {
+        if (randVal < 90)
+        {
+            lastRollRarity = "Rare";
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool checkLegendary(int randVal)
+    {
+        if (randVal <= 98 && randVal >= 90)
+        {
+            lastRollRarity = "Legendary";
+            return true;
+        }
+        return false;
+    }
+    public bool checkMythic(int randVal)
+    {
+        if (randVal == 99)
+        {
+            lastRollRarity = "Mythic";
+            return true;
+        }
+        return false;
     }
 
      public void determineRarity()
@@ -43,4 +100,4 @@ public class SummonerController : ScriptableObject, SummonerControllerInterface
     }
 
 }
-}
+

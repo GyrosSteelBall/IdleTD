@@ -17,8 +17,8 @@ public class Legendary : ScriptableObject,UnitRarityInterface
         heroArray = new List<string>();
     }
 
-    public void rollUnit()
+    public string rollUnit()
     {
-        throw new NotImplementedException();
+        return heroArray[0];    
     }
 }

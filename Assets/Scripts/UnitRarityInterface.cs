@@ -5,7 +5,7 @@ using UnityEngine;
 interface UnitRarityInterface
 {
 
-    void rollUnit();
+    string rollUnit();
 
 
 }

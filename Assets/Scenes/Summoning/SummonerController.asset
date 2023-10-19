@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 948e2dc5eff498741ae57ee6e92ea1fa, type: 3}
+  m_Name: SummonerController
+  m_EditorClassIdentifier: 
+  heropool: []
+  commonObjectScript: {fileID: 11400000, guid: 0f34a329428404542bd7c372d56acfbf, type: 2}
+  uncommonObjectScript: {fileID: 11400000, guid: e942252d01415794b9acc31e23ada6a4,
+    type: 2}
+  rareObjectScript: {fileID: 11400000, guid: b37ad13d25f7179409ad477ac34abad4, type: 2}
+  legendaryObjectScript: {fileID: 11400000, guid: 23e90b35bdb313e40b29ebaacb011d4d,
+    type: 2}
+  mythicObjectScript: {fileID: 11400000, guid: 40470c8445b504248ae37718a0369462, type: 2}
+  rolledHero: 
+  arraylength: 0
+  isGenerated: 0

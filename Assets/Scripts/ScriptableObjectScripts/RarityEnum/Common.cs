@@ -16,9 +16,11 @@ public class Common : ScriptableObject, UnitRarityInterface
         heroArray = new List<string>();
     }
 
-    public void rollUnit()
+    public string rollUnit()
     {
-
+        int heroListSize = heroArray.Count;
+        int randomValue = UnityEngine.Random.Range(0, heroListSize);
+        return heroArray[randomValue];
     }
   
 

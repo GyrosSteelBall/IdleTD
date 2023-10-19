@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0b59352cbe8c844a97cac935b7413ad, type: 3}
   m_Name: Mythic
   m_EditorClassIdentifier: 
-  heroArray: []
-  rarityPooling: 1
+  heroArray:
+  - RoyalKnight
+  rarityPooling: 0

@@ -15,8 +15,8 @@ public class Uncommon : ScriptableObject, UnitRarityInterface
         heroArray = new List<string>();
     }
 
-    public void rollUnit()
+    public string rollUnit()
     {
-        
+        return heroArray[0];
     }
 }

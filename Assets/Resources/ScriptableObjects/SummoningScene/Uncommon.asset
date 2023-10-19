@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Uncommon
   m_EditorClassIdentifier: 
   heroArray:
-  - Necromancer
+  - ZombieClaus
+  - WitchDoctor
   rarityPooling: 0

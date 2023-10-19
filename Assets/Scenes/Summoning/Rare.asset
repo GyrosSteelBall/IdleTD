@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Rare
   m_EditorClassIdentifier: 
   heroArray:
-  - FireMage
-  - IceMage
-  - SilverMage
-  - Chef
-  rarityPooling: 0
+  - asd
+  - fds
+  currentList: []
+  lastRolledUnit: 
