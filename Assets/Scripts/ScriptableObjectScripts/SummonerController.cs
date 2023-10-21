@@ -11,6 +11,7 @@ public class SummonerController : ScriptableObject, SummonerControllerInterface
     public Rare rareObjectScript;
     public Legendary legendaryObjectScript;
     public Mythic mythicObjectScript;
+    public HeroCollection heroCollectionScript;
     public string rolledHero;
     public string lastRollRarity;
     GameObject rolledHeroSpawn;
@@ -28,20 +29,22 @@ public class SummonerController : ScriptableObject, SummonerControllerInterface
 
     public void rollLogic()
     {
+
         bool isCommon = checkCommon();
-        if (isCommon) { rolledHero = commonObjectScript.rollUnit(); return; }
+        if (isCommon) { rolledHero = commonObjectScript.rollUnit(); updateHeroCollection(rolledHero); return; }
         bool isUnCommon = checkUnCommon();
-        if (isUnCommon) { rolledHero = uncommonObjectScript.rollUnit(); return; }
+        if (isUnCommon) { rolledHero = uncommonObjectScript.rollUnit(); updateHeroCollection(rolledHero); return; }
         int RareLegendaryMythicChance = Random.Range(0, 100);
         bool isRare = checkRare(RareLegendaryMythicChance);
-        if(isRare) { rolledHero = rareObjectScript.rollUnit(); return; }
+        if(isRare) { rolledHero = rareObjectScript.rollUnit(); updateHeroCollection(rolledHero); return; }
         bool isLegendary = checkLegendary(RareLegendaryMythicChance);
-        if (isLegendary) { rolledHero = legendaryObjectScript.rollUnit(); return; }
+        if (isLegendary) { rolledHero = legendaryObjectScript.rollUnit(); updateHeroCollection(rolledHero); return; }
         bool isMythic = checkMythic(RareLegendaryMythicChance);
-        if (isMythic) { rolledHero = mythicObjectScript.rollUnit(); return; }
+        if (isMythic) { rolledHero = mythicObjectScript.rollUnit(); updateHeroCollection(rolledHero); return; }
 
 
         rolledHero = commonObjectScript.rollUnit();
+        
     }
 
     public bool checkCommon()
@@ -107,6 +110,11 @@ public class SummonerController : ScriptableObject, SummonerControllerInterface
      public void determineRarity()
     {
         throw new System.NotImplementedException();
+    }
+
+    public void updateHeroCollection(string hero)
+    {
+        heroCollectionScript.herocollection.Add(hero);
     }
 
 }

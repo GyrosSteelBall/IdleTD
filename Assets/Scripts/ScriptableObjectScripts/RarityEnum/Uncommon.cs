@@ -21,8 +21,5 @@ public class Uncommon : ScriptableObject, UnitRarityInterface
         return heroArray[0];
     }
 
-    public void OnValidate()
-    {
-        EditorUtility.SetDirty(this);
-    }
+
 }

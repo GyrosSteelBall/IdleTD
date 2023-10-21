@@ -25,8 +25,5 @@ public class Legendary : ScriptableObject,UnitRarityInterface
         return heroArray[randomValue];
     }
 
-    public void OnValidate()
-    {
-        EditorUtility.SetDirty(this);
-    }
+
 }
