@@ -13,5 +13,10 @@ MonoBehaviour:
   m_Name: Rare
   m_EditorClassIdentifier: 
   heroArray:
+  - Executioner
   - FireMage
+  - Necromancer
+  - IceMage
+  - SilverMage
+  - LifeDruid
   rarityPooling: 0

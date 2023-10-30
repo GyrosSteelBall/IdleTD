@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Legendary", menuName = "data/Legendary")]
-public class Legendary : ScriptableObject
+public class Legendary : ScriptableObject,UnitRarityInterface
 {
 
     [SerializeField]
@@ -14,7 +15,15 @@ public class Legendary : ScriptableObject
 
     public void Awake()
     {
-        heroArray = new List<string>();
+       
     }
+
+    public string rollUnit()
+    {
+        int heroListSize = heroArray.Count;
+        int randomValue = UnityEngine.Random.Range(0, heroListSize);
+        return heroArray[randomValue];
+    }
+
 
 }

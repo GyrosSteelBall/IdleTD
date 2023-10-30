@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Mythic", menuName = "data/Mythic")]
-public class Mythic : ScriptableObject
+public class Mythic : ScriptableObject, UnitRarityInterface
 {
 
     [SerializeField]
@@ -14,7 +15,15 @@ public class Mythic : ScriptableObject
 
     public void Awake()
     {
-        heroArray = new List<string>();
+        
     }
+
+    public string rollUnit()
+    {
+        int heroListSize = heroArray.Count;
+        int randomValue = UnityEngine.Random.Range(0, heroListSize);
+        return heroArray[randomValue];
+    }
+
 
 }

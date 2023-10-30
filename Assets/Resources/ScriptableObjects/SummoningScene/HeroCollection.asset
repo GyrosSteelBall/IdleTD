@@ -9,18 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e112198c3405f8c488cd45296388be6f, type: 3}
-  m_Name: Uncommon
+  m_Script: {fileID: 11500000, guid: 4263d4e1ed1c76048a673956492fb65c, type: 3}
+  m_Name: HeroCollection
   m_EditorClassIdentifier: 
-  heroArray:
-  - ZombieClaus
-  - WitchDoctor
-  - Spearman
-  - Swordsman
-  - MilitiaMen
-  - LifeDruid
-  - Duelist
-  - NobleLongBowman
-  - DemonSamurai
-  - ElvishArcher
-  rarityPooling: 0
+  herocollection: []

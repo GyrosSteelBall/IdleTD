@@ -13,5 +13,10 @@ MonoBehaviour:
   m_Name: Common
   m_EditorClassIdentifier: 
   heroArray:
+  - Bowman
+  - Farmer
+  - Chef
+  - Miner
+  - Thief
+  - PeasantBowman
   - Pirate
-  rarityPooling: 0
