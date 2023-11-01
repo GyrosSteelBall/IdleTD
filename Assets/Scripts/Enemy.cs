@@ -1,54 +1,55 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Enemy : MonoBehaviour, IDamageable
+public class Enemy : MonoBehaviour
 {
-    public delegate void DeathEventHandler(Enemy enemy);
-    public event DeathEventHandler OnDeath;
-    [SerializeField]
-    private float health;
-    public float Health { get { return health; } set { health = value; } }
+    public Path path;
+    public float speed;
+    public float health;
 
-    [SerializeField]
-    private float damage;
-    public float Damage { get { return damage; } set { damage = value; } }
+    private int currentWaypointIndex = 0;
 
-    [SerializeField]
-    private float movementSpeed;
-    public float MovementSpeed { get { return movementSpeed; } set { movementSpeed = value; } }
-
-    public Vector3 Position
+    private void Start()
     {
-        get { return transform.position; }
-        set { transform.position = value; }
-    }
-
-    public bool Die()
-    {
-        bool isDead = Health <= 0;
-        if (isDead)
+        // Find the Path script in the scene and assign it as the enemy’s path
+        path = FindObjectOfType<Path>();
+        if (path == null)
         {
-            OnDeath?.Invoke(this);
+            Debug.LogError("No Path script found in the scene.");
         }
-        return isDead;
     }
 
-    public void Move(Vector3 targetPosition)
+    void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, MovementSpeed * Time.deltaTime);
+        Move();
     }
 
-    public void Attack(Unit target)
+    void Move()
     {
-        target.TakeDamage(Damage);
+        if (currentWaypointIndex < path.waypoints.Length)
+        {
+            Transform targetWaypoint = path.waypoints[currentWaypointIndex];
+            transform.position = Vector3.MoveTowards(transform.position, targetWaypoint.position, speed * Time.deltaTime);
+
+            if (transform.position == targetWaypoint.position)
+            {
+                currentWaypointIndex++;
+            }
+        }
     }
 
     public void TakeDamage(float damage)
     {
-        Health = Mathf.Max(0, Health - damage);
-        if (Health <= 0)
+        health -= damage;
+        if (health <= 0)
         {
             Die();
         }
+    }
+
+    void Die()
+    {
+        // Logic to handle the enemy's death, such as playing an animation or effect
+        Destroy(gameObject);
     }
 }
