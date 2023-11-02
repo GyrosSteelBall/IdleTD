@@ -1,11 +1,14 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
     public Path path;
     public float speed;
     public float health;
+    public float maxHealth; // Set this value to the enemy's maximum health
+    public Slider healthBarSlider; // Reference to the health bar slider
 
     private int currentWaypointIndex = 0;
 
@@ -17,6 +20,10 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("No Path script found in the scene.");
         }
+
+        // Initialize the health bar
+        healthBarSlider.maxValue = maxHealth;
+        healthBarSlider.value = health;
     }
 
     void Update()
@@ -41,6 +48,7 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(float damage)
     {
         health -= damage;
+        healthBarSlider.value = health; // Update the slider value whenever the enemy takes damage
         if (health <= 0)
         {
             Die();
