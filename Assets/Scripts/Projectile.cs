@@ -5,7 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public float speed;
-    private Enemy target;
+    protected Enemy target;
     public float damage;
 
     void Update()
@@ -36,7 +36,7 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    public void HitTarget()
+    virtual public void HitTarget()
     {
         target.TakeDamage(damage);
         Destroy(gameObject);
