@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     public Slider healthBarSlider; // Reference to the health bar slider
 
     private int currentWaypointIndex = 0;
+    public int goldValue;
 
     private void Start()
     {
@@ -58,6 +59,13 @@ public class Enemy : MonoBehaviour
     void Die()
     {
         // Logic to handle the enemy's death, such as playing an animation or effect
+        DropResources(); // Drop resources before dying
         Destroy(gameObject);
     }
+
+    void DropResources()
+    {
+        GameManager.instance.gold += goldValue;
+    }
+
 }

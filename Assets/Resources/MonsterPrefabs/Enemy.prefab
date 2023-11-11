@@ -52,6 +52,7 @@ MonoBehaviour:
   health: 100
   maxHealth: 100
   healthBarSlider: {fileID: 1203904947496957415}
+  goldValue: 1
 --- !u!61 &5642421797614169705
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -114,6 +115,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: -105541197
+      objectReference: {fileID: 0}
+    - target: {fileID: 3345099991007299821, guid: c502842ab7dcb684382380a9ebde409e,
+        type: 3}
+      propertyPath: m_Value
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3696338280855873771, guid: c502842ab7dcb684382380a9ebde409e,
         type: 3}
