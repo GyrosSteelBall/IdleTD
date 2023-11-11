@@ -15,6 +15,7 @@ public class Unit : MonoBehaviour
     public float baseDamage; // Base damage for level 0
     public float damageIncreasePerLevel; // Damage increase per upgrade level
     public GameObject rangeIndicator;
+    private Animator animator;
 
 
     // Add a Unity event for detecting when the GameObject is clicked. This has to be called in Awake or Start.
@@ -25,6 +26,7 @@ public class Unit : MonoBehaviour
         rangeCollider.isTrigger = true; // Make sure it won't interfere with physics
         rangeCollider.radius = attackRange;
         rangeCollider.enabled = false; // Disable it initially
+        animator = GetComponent<Animator>();
     }
 
     private void OnMouseDown()
@@ -72,6 +74,14 @@ public class Unit : MonoBehaviour
             GameObject newProjectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
             Projectile projectile = newProjectile.GetComponent<Projectile>();
             projectile.Initialize(target, GetCurrentDamage());
+
+            // Trigger the attack animation only if a projectile is being shot
+            animator.SetTrigger("isAttacking");
+        }
+        else
+        {
+            // If no target is found, ensure the unit reverts to its idle state
+            animator.SetTrigger("isIdle");
         }
     }
 
@@ -137,5 +147,11 @@ public class Unit : MonoBehaviour
     {
         // Return current upgrade cost based on the level or some other logic.
         return upgradeCost; // Assuming you have a field named upgradeCost.
+    }
+
+    private void Idle() // You'll need to call this when the unit is not attacking
+    {
+        // Trigger the idle animation
+        animator.SetTrigger("Idle");
     }
 }
