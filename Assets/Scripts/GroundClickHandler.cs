@@ -3,6 +3,13 @@ using UnityEngine.EventSystems;
 
 public class GroundClickHandler : MonoBehaviour
 {
+    private Camera mainCamera;
+
+    private void Start()
+    {
+        mainCamera = Camera.main;
+    }
+
     void Update()
     {
         // Check for left mouse click
@@ -15,7 +22,7 @@ public class GroundClickHandler : MonoBehaviour
                 return;
             }
             // Convert mouse position to world position for 2D Raycast
-            Vector2 mousePos2D = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePos2D = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 
             // Perform the Raycast towards the mouse position
             RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);

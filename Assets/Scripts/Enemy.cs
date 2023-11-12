@@ -3,12 +3,15 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    public Path path;
+
+    [Header("Dependencies")]
+    [SerializeField] private Slider healthBarSlider;
+    [Header("Attributes")]
     public float speed;
     public float health;
     public float maxHealth; // Set this value to the enemy's maximum health
-    public Slider healthBarSlider; // Reference to the health bar slider
 
+    private Path path;
     private int currentWaypointIndex = 0;
     public int goldValue;
     private float distanceTraveled; // Total distance traveled along the path

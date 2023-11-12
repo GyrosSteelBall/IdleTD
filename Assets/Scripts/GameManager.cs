@@ -6,9 +6,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance; // Static instance of GameManager which allows it to be accessed by any other script.
 
+    [Header("Game Configuration")]
     public int gold;
     public int lives;
-    public Wave[] waves;
+    [Header("Waves")]
+    [SerializeField] private Wave[] waves;
     private int currentWaveIndex = 0;
 
     private void Awake()

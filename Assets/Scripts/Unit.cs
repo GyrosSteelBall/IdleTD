@@ -14,7 +14,8 @@ public enum TargetingPriority
 
 public class Unit : MonoBehaviour
 {
-    public GameObject projectilePrefab;
+    [Header("Unit Configuration")]
+    [SerializeField] private GameObject projectilePrefab;
     public float attackSpeed;
     public float attackRange;
     private CircleCollider2D rangeCollider;
