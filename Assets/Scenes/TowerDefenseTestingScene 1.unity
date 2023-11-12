@@ -3407,7 +3407,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 649c64eb890386245a873db0970cf418, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 3022967056629886726, guid: 3fe723e5d75617045abbfe5c5a658539,
+  projectilePrefab: {fileID: 3022967056629886726, guid: 53fd1a49030a69948993895ebebab64e,
     type: 3}
   attackSpeed: 2
   attackRange: 5
@@ -3416,6 +3416,7 @@ MonoBehaviour:
   baseDamage: 10
   damageIncreasePerLevel: 10
   rangeIndicator: {fileID: 422262137}
+  targetingPriority: 0
 --- !u!95 &232669446
 Animator:
   serializedVersion: 5
