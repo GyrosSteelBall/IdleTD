@@ -47,12 +47,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad7c04c382eb28b4dabbf78fc7595b73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: {fileID: 0}
+  healthBarSlider: {fileID: 1203904947496957415}
   speed: 1
   health: 100
   maxHealth: 100
-  healthBarSlider: {fileID: 1203904947496957415}
   goldValue: 1
+  enemySpriteRenderer: {fileID: 7384824658887586958}
 --- !u!61 &5642421797614169705
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -356,6 +356,12 @@ PrefabInstance:
 --- !u!4 &2759350537024003433 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5154141471479615409, guid: 3050b9eb59b757648a843b220c8fb8f4,
+    type: 3}
+  m_PrefabInstance: {fileID: 7047041523736613592}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &7384824658887586958 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 553999977260885590, guid: 3050b9eb59b757648a843b220c8fb8f4,
     type: 3}
   m_PrefabInstance: {fileID: 7047041523736613592}
   m_PrefabAsset: {fileID: 0}
