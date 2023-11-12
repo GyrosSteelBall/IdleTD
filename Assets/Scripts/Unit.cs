@@ -2,6 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TargetingPriority
+{
+    First,
+    Last,
+    Closest,
+    Strongest,
+    Weakest,
+    // ... add other targeting priorities here
+}
+
 public class Unit : MonoBehaviour
 {
     public GameObject projectilePrefab;
@@ -16,6 +26,7 @@ public class Unit : MonoBehaviour
     public float damageIncreasePerLevel; // Damage increase per upgrade level
     public GameObject rangeIndicator;
     private Animator animator;
+    public TargetingPriority targetingPriority = TargetingPriority.First;
 
 
     // Add a Unity event for detecting when the GameObject is clicked. This has to be called in Awake or Start.
@@ -61,27 +72,41 @@ public class Unit : MonoBehaviour
         attackTimer += Time.deltaTime;
         if (attackTimer >= 1 / attackSpeed)
         {
-            Attack();
-            attackTimer = 0f;
+            // Before attacking, ensure there is a target to face towards
+            Enemy target = FindTarget();
+            if (target != null)
+            {
+                FaceTarget(target);
+                Attack(target);
+                attackTimer = 0f;
+            }
         }
     }
 
-    void Attack()
+    void Attack(Enemy target)
     {
-        Enemy target = FindTarget();
+        GameObject newProjectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+        Projectile projectile = newProjectile.GetComponent<Projectile>();
+        projectile.Initialize(target, GetCurrentDamage());
+
+        // Trigger the attack animation only if a projectile is being shot
+        animator.SetTrigger("Attack");
+    }
+
+    // Face towards the target by flipping the sprite on the X axis
+    void FaceTarget(Enemy target)
+    {
         if (target != null)
         {
-            GameObject newProjectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-            Projectile projectile = newProjectile.GetComponent<Projectile>();
-            projectile.Initialize(target, GetCurrentDamage());
-
-            // Trigger the attack animation only if a projectile is being shot
-            animator.SetTrigger("isAttacking");
-        }
-        else
-        {
-            // If no target is found, ensure the unit reverts to its idle state
-            animator.SetTrigger("isIdle");
+            Vector3 toTarget = target.transform.position - transform.position;
+            if (toTarget.x < 0)
+            {
+                transform.localScale = new Vector3(-1, 1, 1);
+            }
+            else if (toTarget.x > 0)
+            {
+                transform.localScale = new Vector3(1, 1, 1);
+            }
         }
     }
 
@@ -89,16 +114,74 @@ public class Unit : MonoBehaviour
     {
         // Getting all colliders within the attack range
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, attackRange);
+        Enemy target = null;
 
+        switch (targetingPriority)
+        {
+            case TargetingPriority.First:
+                target = FindFirst(colliders);
+                break;
+            case TargetingPriority.Last:
+                target = FindLast(colliders);
+                break;
+            case TargetingPriority.Closest:
+                target = FindClosest(colliders);
+                break;
+                // Add cases for other priorities using similar methods
+        }
+
+        return target;
+    }
+
+    Enemy FindFirst(Collider2D[] colliders)
+    {
+        // Assuming enemies have a 'distance along path' value
+        Enemy firstEnemy = null;
+        float maxDistance = float.MinValue;
+
+        foreach (Collider2D collider in colliders)
+        {
+            Enemy enemy = collider.GetComponent<Enemy>();
+            if (enemy != null && enemy.DistanceAlongPath > maxDistance)
+            {
+                maxDistance = enemy.DistanceAlongPath;
+                firstEnemy = enemy;
+            }
+        }
+
+        return firstEnemy;
+    }
+
+    Enemy FindLast(Collider2D[] colliders)
+    {
+        // Assuming enemies have a 'distance along path' value
+        Enemy lastEnemy = null;
+        float minDistance = float.MaxValue;
+
+        foreach (Collider2D collider in colliders)
+        {
+            Enemy enemy = collider.GetComponent<Enemy>();
+            if (enemy != null && enemy.DistanceAlongPath < minDistance)
+            {
+                minDistance = enemy.DistanceAlongPath;
+                lastEnemy = enemy;
+            }
+        }
+
+        return lastEnemy;
+    }
+
+    Enemy FindClosest(Collider2D[] colliders)
+    {
         Enemy closestEnemy = null;
-        float closestDistance = attackRange;
+        float closestDistance = float.MaxValue;
 
         foreach (Collider2D collider in colliders)
         {
             Enemy enemy = collider.GetComponent<Enemy>();
             if (enemy != null)
             {
-                float distance = Vector2.Distance(transform.position, collider.transform.position);
+                float distance = Vector3.Distance(transform.position, enemy.transform.position);
                 if (distance < closestDistance)
                 {
                     closestDistance = distance;

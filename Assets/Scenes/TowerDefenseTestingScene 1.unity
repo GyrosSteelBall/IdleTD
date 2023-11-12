@@ -3388,7 +3388,7 @@ Transform:
   m_GameObject: {fileID: 232669443}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.7, y: -20.15, z: 0}
+  m_LocalPosition: {x: -2.7, y: -21.22, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -3407,9 +3407,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 649c64eb890386245a873db0970cf418, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 3022967056629886726, guid: 53fd1a49030a69948993895ebebab64e,
+  projectilePrefab: {fileID: 3022967056629886726, guid: 3fe723e5d75617045abbfe5c5a658539,
     type: 3}
-  attackSpeed: 0.5
+  attackSpeed: 2
   attackRange: 5
   upgradeCost: 10
   maxUpgradeLevel: 3
@@ -3426,7 +3426,7 @@ Animator:
   m_GameObject: {fileID: 232669443}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 5c73147d6b37cf14987873459672d636, type: 2}
+  m_Controller: {fileID: 9100000, guid: 462c2ad186e029b4e8cc890ac497f5f5, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3478,7 +3478,8 @@ SpriteRenderer:
   m_SortingLayerID: -105541197
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: -214973407, guid: 7dce174ecb16ac04eb2097ec05ade3fd, type: 3}
+  m_Sprite: {fileID: 4723107735738678597, guid: 32a3f82c19ab5fe48aa151424ff383aa,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

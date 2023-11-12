@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
@@ -12,6 +11,13 @@ public class Enemy : MonoBehaviour
 
     private int currentWaypointIndex = 0;
     public int goldValue;
+    private float distanceTraveled; // Total distance traveled along the path
+
+    // Property to access distance traveled
+    public float DistanceAlongPath
+    {
+        get { return distanceTraveled; }
+    }
 
     private void Start()
     {
@@ -25,6 +31,8 @@ public class Enemy : MonoBehaviour
         // Initialize the health bar
         healthBarSlider.maxValue = maxHealth;
         healthBarSlider.value = health;
+
+        distanceTraveled = 0f; // Starting with zero distance
     }
 
     void Update()
@@ -37,7 +45,11 @@ public class Enemy : MonoBehaviour
         if (currentWaypointIndex < path.waypoints.Length)
         {
             Transform targetWaypoint = path.waypoints[currentWaypointIndex];
+            Vector3 previousPosition = transform.position;
             transform.position = Vector3.MoveTowards(transform.position, targetWaypoint.position, speed * Time.deltaTime);
+
+            // Add the distance moved this frame to the total distance traveled
+            distanceTraveled += Vector3.Distance(previousPosition, transform.position);
 
             if (transform.position == targetWaypoint.position)
             {
@@ -67,5 +79,4 @@ public class Enemy : MonoBehaviour
     {
         GameManager.instance.gold += goldValue;
     }
-
 }
