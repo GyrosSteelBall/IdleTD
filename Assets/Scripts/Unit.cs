@@ -143,7 +143,7 @@ public class Unit : MonoBehaviour
         foreach (Collider2D collider in colliders)
         {
             Enemy enemy = collider.GetComponent<Enemy>();
-            if (enemy != null && enemy.DistanceAlongPath > maxDistance)
+            if (enemy != null && enemy.DistanceAlongPath > maxDistance && !enemy.IsDead)
             {
                 maxDistance = enemy.DistanceAlongPath;
                 firstEnemy = enemy;
@@ -162,7 +162,7 @@ public class Unit : MonoBehaviour
         foreach (Collider2D collider in colliders)
         {
             Enemy enemy = collider.GetComponent<Enemy>();
-            if (enemy != null && enemy.DistanceAlongPath < minDistance)
+            if (enemy != null && enemy.DistanceAlongPath < minDistance && !enemy.IsDead)
             {
                 minDistance = enemy.DistanceAlongPath;
                 lastEnemy = enemy;
@@ -180,7 +180,7 @@ public class Unit : MonoBehaviour
         foreach (Collider2D collider in colliders)
         {
             Enemy enemy = collider.GetComponent<Enemy>();
-            if (enemy != null)
+            if (enemy != null && !enemy.IsDead)
             {
                 float distance = Vector3.Distance(transform.position, enemy.transform.position);
                 if (distance < closestDistance)

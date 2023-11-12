@@ -53,6 +53,9 @@ MonoBehaviour:
   maxHealth: 100
   goldValue: 1
   enemySpriteRenderer: {fileID: 7384824658887586958}
+  animator: {fileID: 868357648117859000}
+  runAnimationName: Run
+  deathAnimationName: Die
 --- !u!61 &5642421797614169705
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -353,6 +356,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3050b9eb59b757648a843b220c8fb8f4, type: 3}
+--- !u!95 &868357648117859000 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 7908629100736057440, guid: 3050b9eb59b757648a843b220c8fb8f4,
+    type: 3}
+  m_PrefabInstance: {fileID: 7047041523736613592}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2759350537024003433 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5154141471479615409, guid: 3050b9eb59b757648a843b220c8fb8f4,

@@ -24,6 +24,13 @@ public class Enemy : MonoBehaviour
     private static Material blinkMaterial;
     private Coroutine damageCoroutine;
 
+    [Header("Animations")]
+    [SerializeField] private Animator animator; // Assign this in the Inspector
+    [SerializeField] private string runAnimationName = "Run"; // Animator trigger for the running animation
+    [SerializeField] private string deathAnimationName = "Die"; // Animator trigger for the death animation
+    [SerializeField] private float deathAnimationDuration = 1.6f; // Duration in seconds
+    public bool IsDead { get; private set; } = false;
+
     // Property to access distance traveled
     public float DistanceAlongPath
     {
@@ -48,7 +55,11 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        Move();
+        if (!IsDead)
+        {
+            Move();
+            UpdateAnimationDirection();
+        }
     }
 
     void Move()
@@ -57,7 +68,15 @@ public class Enemy : MonoBehaviour
         {
             Transform targetWaypoint = path.waypoints[currentWaypointIndex];
             Vector3 previousPosition = transform.position;
-            transform.position = Vector3.MoveTowards(transform.position, targetWaypoint.position, speed * Time.deltaTime);
+            Vector3 direction = Vector3.MoveTowards(transform.position, targetWaypoint.position, speed * Time.deltaTime) - transform.position;
+
+            if (direction != Vector3.zero)
+            {
+                // For 2D sprites in a 2D game
+                enemySpriteRenderer.flipX = direction.x < 0;
+            }
+
+            transform.position += direction;
 
             // Add the distance moved this frame to the total distance traveled
             distanceTraveled += Vector3.Distance(previousPosition, transform.position);
@@ -66,17 +85,31 @@ public class Enemy : MonoBehaviour
             {
                 currentWaypointIndex++;
             }
+
+            // Play running animation if not already playing
+            if (!animator.GetCurrentAnimatorStateInfo(0).IsName(runAnimationName))
+            {
+                animator.SetTrigger(runAnimationName);
+            }
         }
+    }
+
+    void UpdateAnimationDirection()
+    {
+        // Depending on your game, you may need more complex logic to determine the facing direction (e.g., 8-way movement)
     }
 
     public void TakeDamage(float damage)
     {
-        health -= damage;
-        healthBarSlider.value = health; // Update the slider value whenever the enemy takes damage
-        Blink();
-        if (health <= 0)
+        if (!IsDead)
         {
-            Die();
+            health -= damage;
+            healthBarSlider.value = health; // Update the slider value whenever the enemy takes damage
+            Blink();
+            if (health <= 0)
+            {
+                Die();
+            }
         }
     }
 
@@ -103,8 +136,27 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-        // Logic to handle the enemy's death, such as playing an animation or effect
-        DropResources(); // Drop resources before dying
+        IsDead = true; // Stop the enemy from moving or performing actions
+        // Play the death animation
+        animator.SetTrigger(deathAnimationName);
+        DropResources(); // Drop resources before cleanup
+
+        // Start the coroutine to wait before removal
+        StartCoroutine(WaitBeforeRemoval(deathAnimationDuration));
+    }
+
+    IEnumerator WaitBeforeRemoval(float delay)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+
+        // Call the cleanup method after the delay
+        RemoveEnemy();
+    }
+
+    public void RemoveEnemy()
+    {
+        // Logic to handle the enemy's cleanup after death
         Destroy(gameObject);
     }
 
