@@ -34,7 +34,7 @@ public class ChainingProjectile : Projectile
 
         foreach (Enemy enemy in enemies)
         {
-            if (!hitEnemies.Contains(enemy)) // Ensure the enemy hasn’t already been hit
+            if (!hitEnemies.Contains(enemy) && !enemy.IsDead) // Ensure the enemy hasn’t already been hit
             {
                 float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
                 if (distanceToEnemy < closestDistance && enemy != target)
