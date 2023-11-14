@@ -47,10 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 649c64eb890386245a873db0970cf418, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 3022967056629886726, guid: 53fd1a49030a69948993895ebebab64e,
+  projectilePrefab: {fileID: 3022967056629886726, guid: 3fe723e5d75617045abbfe5c5a658539,
     type: 3}
   attackSpeed: 2
-  attackRange: 5
+  attackRange: 3
   upgradeCost: 10
   maxUpgradeLevel: 3
   baseDamage: 5
@@ -68,7 +68,7 @@ Animator:
   m_GameObject: {fileID: 6629349813719787111}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 462c2ad186e029b4e8cc890ac497f5f5, type: 2}
+  m_Controller: {fileID: 9100000, guid: 7caebbef0eab67f4babf2a90d7d907a9, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

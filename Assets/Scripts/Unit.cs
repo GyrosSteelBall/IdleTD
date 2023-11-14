@@ -30,6 +30,7 @@ public class Unit : MonoBehaviour
     private Animator animator;
     public TargetingPriority targetingPriority = TargetingPriority.First;
     [SerializeField] public Sprite icon;
+    private bool isAbleToAttack = true;
 
 
     // Add a Unity event for detecting when the GameObject is clicked. This has to be called in Awake or Start.
@@ -55,6 +56,20 @@ public class Unit : MonoBehaviour
         ShowRange(true);
     }
 
+    // Call this method to enable/disable attacking
+    public void EnableAttacking(bool enable)
+    {
+        isAbleToAttack = enable;
+        if (!enable)
+        {
+            CancelInvoke(nameof(AttackRoutine)); // Stop attack routine when not able to attack
+        }
+        else if (!IsInvoking(nameof(AttackRoutine)))
+        {
+            InvokeRepeating(nameof(AttackRoutine), 0f, 1 / attackSpeed); // Resume attack routine
+        }
+    }
+
     public void ShowRange(bool show)
     {
         if (show)
@@ -70,20 +85,35 @@ public class Unit : MonoBehaviour
         }
     }
 
+    private void AttackRoutine()
+    {
+        // Your existing attack logic, potentially moved from Update
+        // Make sure you still check `isAbleToAttack` before actually attacking
+        if (!isAbleToAttack)
+            return;
+
+        Enemy target = FindTarget();
+        if (target != null)
+        {
+            FaceTarget(target);
+            Attack(target);
+        }
+    }
+
     void Update()
     {
-        attackTimer += Time.deltaTime;
-        if (attackTimer >= 1 / attackSpeed)
-        {
-            // Before attacking, ensure there is a target to face towards
-            Enemy target = FindTarget();
-            if (target != null)
-            {
-                FaceTarget(target);
-                Attack(target);
-                attackTimer = 0f;
-            }
-        }
+        // attackTimer += Time.deltaTime;
+        // if (attackTimer >= 1 / attackSpeed)
+        // {
+        //     // Before attacking, ensure there is a target to face towards
+        //     Enemy target = FindTarget();
+        //     if (target != null)
+        //     {
+        //         FaceTarget(target);
+        //         Attack(target);
+        //         attackTimer = 0f;
+        //     }
+        // }
     }
 
     void Attack(Enemy target)

@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Transform hotbarPanelTransform; // Parent transform of the hotbar items
     [SerializeField] private GameObject hotbarItemPrefab; // The UI prefab that represents a unit in the hotbar
     [SerializeField] private List<Unit> availableUnits; //Configure this for now, later needs to be dynamic based on player's team
+    public UnitPlacementManager unitPlacementManager;
 
     private void Awake()
     {
@@ -62,11 +63,8 @@ public class UIManager : MonoBehaviour
         foreach (Unit unit in availableUnits)
         {
             GameObject hotbarItem = Instantiate(hotbarItemPrefab, hotbarPanelTransform);
-            // Add code here to set up the hotbar item, for example:
             hotbarItem.transform.Find("UnitSprite").GetComponent<Image>().sprite = unit.icon;
-            // hotbarItem.GetComponentInChildren<TextMeshProUGUI>().text = unit.cost.ToString();
-            // And any hook-ups to buttons or events. E.g.:
-            // hotbarItem.GetComponent<Button>().onClick.AddListener(() => SelectUnit(unit));
+            hotbarItem.GetComponent<Button>().onClick.AddListener(() => unitPlacementManager.StartPlacingUnit(unit));
         }
     }
 
