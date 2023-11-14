@@ -130,7 +130,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f604d40f0e6a78429bdf2473006a19c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
-  damage: 10
-  maxChains: 10
+  speed: 20
+  maxChains: 3
   maxChainDistance: 10

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class UIManager : MonoBehaviour
     private TextMeshProUGUI upgradeButtonText; // Text on the upgrade button displaying cost.
 
     private Unit selectedUnit; // The currently selected unit.
+    [SerializeField] private Transform hotbarPanelTransform; // Parent transform of the hotbar items
+    [SerializeField] private GameObject hotbarItemPrefab; // The UI prefab that represents a unit in the hotbar
+    [SerializeField] private List<Unit> availableUnits; //Configure this for now, later needs to be dynamic based on player's team
 
     private void Awake()
     {
@@ -29,6 +33,7 @@ public class UIManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         upgradeButton.onClick.AddListener(OnUpgradeButtonClick);
+        PopulateHotbar(availableUnits);
     }
 
     void Update()
@@ -49,6 +54,19 @@ public class UIManager : MonoBehaviour
         else
         {
             upgradeButton.interactable = false; // Make sure we can't interact with the button if we can't upgrade.
+        }
+    }
+
+    public void PopulateHotbar(List<Unit> availableUnits)
+    {
+        foreach (Unit unit in availableUnits)
+        {
+            GameObject hotbarItem = Instantiate(hotbarItemPrefab, hotbarPanelTransform);
+            // Add code here to set up the hotbar item, for example:
+            hotbarItem.transform.Find("UnitSprite").GetComponent<Image>().sprite = unit.icon;
+            // hotbarItem.GetComponentInChildren<TextMeshProUGUI>().text = unit.cost.ToString();
+            // And any hook-ups to buttons or events. E.g.:
+            // hotbarItem.GetComponent<Button>().onClick.AddListener(() => SelectUnit(unit));
         }
     }
 

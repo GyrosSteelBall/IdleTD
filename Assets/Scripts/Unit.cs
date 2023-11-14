@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum TargetingPriority
 {
@@ -28,6 +29,7 @@ public class Unit : MonoBehaviour
     public GameObject rangeIndicator;
     private Animator animator;
     public TargetingPriority targetingPriority = TargetingPriority.First;
+    [SerializeField] public Sprite icon;
 
 
     // Add a Unity event for detecting when the GameObject is clicked. This has to be called in Awake or Start.
