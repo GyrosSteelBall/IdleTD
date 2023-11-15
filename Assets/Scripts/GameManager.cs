@@ -55,4 +55,12 @@ public class GameManager : MonoBehaviour
             StartWave();
         }
     }
+
+    public void SpendGold(int amount)
+    {
+        if (gold - amount >= 0)
+        {
+            gold -= amount;
+        }
+    }
 }

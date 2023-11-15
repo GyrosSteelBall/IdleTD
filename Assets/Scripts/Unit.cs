@@ -31,6 +31,7 @@ public class Unit : MonoBehaviour
     public TargetingPriority targetingPriority = TargetingPriority.First;
     [SerializeField] public Sprite icon;
     private bool isAbleToAttack = true;
+    public int placementCost;
 
 
     // Add a Unity event for detecting when the GameObject is clicked. This has to be called in Awake or Start.

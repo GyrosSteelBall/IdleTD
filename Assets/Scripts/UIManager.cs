@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using System;
 
 public class UIManager : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject hotbarItemPrefab; // The UI prefab that represents a unit in the hotbar
     [SerializeField] private List<Unit> availableUnits; //Configure this for now, later needs to be dynamic based on player's team
     public UnitPlacementManager unitPlacementManager;
+    private List<GameObject> hotbarItems = new List<GameObject>(); // List to keep track of all hotbar items
 
     private void Awake()
     {
@@ -56,15 +58,33 @@ public class UIManager : MonoBehaviour
         {
             upgradeButton.interactable = false; // Make sure we can't interact with the button if we can't upgrade.
         }
+        UpdateHotbarItems(); // Update the hotbar items based on the current gold amount
+    }
+
+    private void UpdateHotbarItems()
+    {
+        foreach (GameObject hotbarItem in hotbarItems)
+        {
+            int unitPlacementCost = int.Parse(hotbarItem.transform.Find("GoldText").GetComponent<TextMeshProUGUI>().text);
+            hotbarItem.GetComponent<Button>().interactable = GameManager.instance.gold >= unitPlacementCost; //May need refactoring
+        }
     }
 
     public void PopulateHotbar(List<Unit> availableUnits)
     {
+        hotbarItems.Clear(); // Clear the existing list
+
+        // Sort the availableUnits list by ascending placementCost
+        availableUnits.Sort((unit1, unit2) => unit1.placementCost.CompareTo(unit2.placementCost));
+
         foreach (Unit unit in availableUnits)
         {
             GameObject hotbarItem = Instantiate(hotbarItemPrefab, hotbarPanelTransform);
             hotbarItem.transform.Find("UnitSprite").GetComponent<Image>().sprite = unit.icon;
+            hotbarItem.transform.Find("GoldText").GetComponent<TextMeshProUGUI>().text = unit.placementCost.ToString();
             hotbarItem.GetComponent<Button>().onClick.AddListener(() => unitPlacementManager.StartPlacingUnit(unit));
+
+            hotbarItems.Add(hotbarItem); // Add the item to the list
         }
     }
 
