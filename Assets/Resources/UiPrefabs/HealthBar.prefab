@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 304.258, y: 100}
+  m_AnchoredPosition: {x: 15.9149, y: 0}
+  m_SizeDelta: {x: 336.0878, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6462635444762760469
 CanvasRenderer:
@@ -109,8 +109,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 272.4844, y: 81.8437}
+  m_AnchoredPosition: {x: 15.888, y: 0}
+  m_SizeDelta: {x: 304.26, y: 81.8437}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5944145211443096663
 CanvasRenderer:
@@ -184,8 +184,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.000579834, y: -0.000061035156}
-  m_SizeDelta: {x: -31.777, y: -18.156}
+  m_AnchoredPosition: {x: 15.888, y: 0.00006484985}
+  m_SizeDelta: {x: 0, y: -18.156}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1444644254159699474
 CanvasRenderer:
@@ -303,7 +303,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 507952311264094265}
   m_HandleRect: {fileID: 0}

@@ -49,12 +49,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 3022967056629886726, guid: 3fe723e5d75617045abbfe5c5a658539,
     type: 3}
-  attackSpeed: 2
-  attackRange: 3
+  attackSpeed: 0.7
+  attackRange: 4
   upgradeCost: 5
   maxUpgradeLevel: 3
-  baseDamage: 5
-  damageIncreasePerLevel: 10
+  baseDamage: 50
+  damageIncreasePerLevel: 25
   rangeIndicator: {fileID: 7912550789858423451}
   targetingPriority: 0
   icon: {fileID: 4723107735738678597, guid: 0fed1e9c4ee3c6248a4e9b7f80b45c6f, type: 3}
