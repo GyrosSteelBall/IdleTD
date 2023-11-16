@@ -40,12 +40,6 @@ public class ChainingProjectile : Projectile
         }
     }
 
-    private void DestroyProjectile()
-    {
-        Destroy(gameObject);
-        // If you have a delegate or Unity event set up to respond to destruction, invoke it here.
-    }
-
     private Enemy FindNextTarget()
     {
         return allEnemies
@@ -56,6 +50,6 @@ public class ChainingProjectile : Projectile
 
     private static Enemy[] FindAllEnemies()
     {
-        return GameObject.FindObjectsOfType<Enemy>();
+        return FindObjectsOfType<Enemy>();
     }
 }

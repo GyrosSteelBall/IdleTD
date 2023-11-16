@@ -58,7 +58,7 @@ MonoBehaviour:
   rangeIndicator: {fileID: 7912550789858423451}
   targetingPriority: 0
   icon: {fileID: 4723107735738678597, guid: 32a3f82c19ab5fe48aa151424ff383aa, type: 3}
-  placementCost: 25
+  placementCost: 5
 --- !u!95 &3174386903624056202
 Animator:
   serializedVersion: 5
