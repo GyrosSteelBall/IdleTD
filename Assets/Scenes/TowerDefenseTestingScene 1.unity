@@ -8865,7 +8865,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 3664418383194520389, guid: a6ee4dc154f72fb45a73ea4cea7fb058,
     type: 3}
   spawnInterval: 2
-  numberOfEnemies: 30
+  numberOfEnemies: 60
   startPosition: {x: -17, y: -19.7, z: 0}
 --- !u!1 &1993453158
 GameObject:

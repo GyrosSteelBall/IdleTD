@@ -1,50 +1,57 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float speed;
-    protected Enemy target;
-    public float damage { get; private set; }
+    [SerializeField] private float speed;
 
-    void Update()
+    protected Enemy target;
+    protected float damage;
+
+    // Unity's MonoBehaviour start method is virtual; let's make use of this in derived classes
+    protected virtual void Start()
     {
-        Move();
+        MoveToTarget();
+    }
+
+    // Added FixedUpdate for physics-related movement
+    protected virtual void FixedUpdate()
+    {
+        MoveToTarget();
     }
 
     public void Initialize(Enemy target, float damage)
     {
         this.target = target;
-        SetDamage(damage); // Set the damage when initializing the projectile
+        this.damage = damage;
     }
 
-    public void SetDamage(float newDamage)
+    protected void MoveToTarget()
     {
-        damage = newDamage;
-    }
-
-    void Move()
-    {
-        if (target != null)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime);
-
-            if (transform.position == target.transform.position)
-            {
-                // Logic to handle reaching the target, like playing an impact effect
-                HitTarget();
-            }
-        }
-        else
+        if (target == null)
         {
             Destroy(gameObject);
+            return;
+        }
+
+        transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime);
+
+        // Utilize a distance check instead of position equality because of floating point precision issues
+        if (Vector3.Distance(transform.position, target.transform.position) < 0.1f)
+        {
+            HitTarget();
         }
     }
 
-    virtual public void HitTarget()
+    // This method is already virtual, which is good for inheritance
+    protected virtual void HitTarget()
     {
         target.TakeDamage(damage);
+        DestroyProjectile();
+    }
+
+    protected void DestroyProjectile()
+    {
+        // If you have a delegate or Unity event set up to respond to destruction, invoke it here.
         Destroy(gameObject);
     }
 }

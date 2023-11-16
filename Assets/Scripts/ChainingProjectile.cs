@@ -1,62 +1,60 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class ChainingProjectile : Projectile
 {
-    public int maxChains;
+    [SerializeField] private int maxChains;
+    [SerializeField] private float maxChainDistance = 10f;
+    private List<Enemy> hitEnemies = new List<Enemy>();
+    private Enemy[] allEnemies;
     private int currentChains;
-    public float maxChainDistance = 10f; // Maximum distance to find the next target
-    private List<Enemy> hitEnemies = new List<Enemy>(); // List to keep track of hit enemies
 
-    public override void HitTarget()
+    protected override void Start()
     {
-        if (currentChains < maxChains)
-        {
-            target.TakeDamage(damage);
-            hitEnemies.Add(target); // Add the target to the list of hit enemies
-            currentChains++;
+        base.Start();
+        // Cache all enemies when the projectile is created
+        allEnemies = FindAllEnemies();
+    }
 
-            // Logic to find and set the next target goes here
-            FindAndSetNextTarget();
+    protected override void HitTarget()
+    {
+        target.TakeDamage(damage);
+        hitEnemies.Add(target);
+        currentChains++;
+
+        if (currentChains >= maxChains)
+        {
+            DestroyProjectile();
+            return;
+        }
+
+        var nextTarget = FindNextTarget();
+        if (nextTarget != null)
+        {
+            target = nextTarget;
         }
         else
         {
-            Destroy(gameObject);
+            DestroyProjectile();
         }
     }
 
-    private void FindAndSetNextTarget()
+    private void DestroyProjectile()
     {
-        Enemy[] enemies = GetAllEnemies();
-        Enemy closestEnemy = null;
-        float closestDistance = maxChainDistance;
-
-        foreach (Enemy enemy in enemies)
-        {
-            if (!hitEnemies.Contains(enemy) && !enemy.IsDead) // Ensure the enemy hasn’t already been hit
-            {
-                float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
-                if (distanceToEnemy < closestDistance && enemy != target)
-                {
-                    closestDistance = distanceToEnemy;
-                    closestEnemy = enemy;
-                }
-            }
-        }
-
-        if (closestEnemy != null)
-        {
-            target = closestEnemy;
-        }
-        else
-        {
-            Destroy(gameObject); // Destroy the projectile if no suitable target is found
-        }
+        Destroy(gameObject);
+        // If you have a delegate or Unity event set up to respond to destruction, invoke it here.
     }
 
-    // Get all game objects with the Enemy script attached
-    private Enemy[] GetAllEnemies()
+    private Enemy FindNextTarget()
+    {
+        return allEnemies
+            .Where(e => !hitEnemies.Contains(e) && !e.IsDead && e != target)
+            .OrderBy(e => Vector3.Distance(transform.position, e.transform.position))
+            .FirstOrDefault();
+    }
+
+    private static Enemy[] FindAllEnemies()
     {
         return GameObject.FindObjectsOfType<Enemy>();
     }
