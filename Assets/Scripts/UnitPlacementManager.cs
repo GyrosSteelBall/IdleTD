@@ -52,7 +52,7 @@ public class UnitPlacementManager : MonoBehaviour
         // Disable attacking and enable the range indicator with the initial color
         tempUnitInstance.EnableAttacking(false);
         tempUnitInstance.ShowRange(true);
-        tempUnitInstance.rangeIndicator.GetComponent<SpriteRenderer>().color = invalidPlacementColor;
+        tempUnitInstance.ChangeRangeIndicatorColor(invalidPlacementColor);
     }
 
     private void UpdatePlacementPosition()
@@ -63,7 +63,7 @@ public class UnitPlacementManager : MonoBehaviour
         // Check if the placement is valid and update the indicator color accordingly
         bool canPlaceUnit = TerrainValidation.CanPlaceUnit(tempUnitInstance.transform.position, validTerrainLayerMask);
         tempUnitInstance.ShowRange(true);
-        tempUnitInstance.rangeIndicator.GetComponent<SpriteRenderer>().color = canPlaceUnit ? validPlacementColor : invalidPlacementColor;
+        tempUnitInstance.ChangeRangeIndicatorColor(canPlaceUnit ? validPlacementColor : invalidPlacementColor);
     }
 
     private void PlaceUnit()
@@ -77,7 +77,7 @@ public class UnitPlacementManager : MonoBehaviour
         currentUnitInstance.ShowRange(false); // Hide the range after placing, unless you want it always visible
 
         // Pay for the unit if there is a cost associated
-        GameManager.Instance.SpendGold(currentUnitInstance.placementCost);
+        GameManager.Instance.SpendGold(currentUnitInstance.PlacementCost);
 
         tempUnitInstance = null; // Clear the previous temporary instance reference
         isPlacingUnit = false;

@@ -12,37 +12,44 @@ public enum TargetingPriority
     Weakest,
     // ... add other targeting priorities here
 }
-
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(CircleCollider2D))]
 public class Unit : MonoBehaviour
 {
     [Header("Unit Configuration")]
     [SerializeField] private GameObject projectilePrefab;
-    public float attackSpeed;
-    public float attackRange;
+    [SerializeField] private float attackSpeed;
+    [SerializeField] private float attackRange;
     private CircleCollider2D rangeCollider;
     private float attackTimer = 0f;
-    private int upgradeLevel = 0; // The current upgrade level of the unit
-    public int upgradeCost;
-    public int maxUpgradeLevel;
-    public float baseDamage; // Base damage for level 0
-    public float damageIncreasePerLevel; // Damage increase per upgrade level
-    public GameObject rangeIndicator;
+    private int upgradeLevel = 0;
+    [SerializeField] private int upgradeCost;
+    [SerializeField] private int maxUpgradeLevel;
+    [SerializeField] private float baseDamage;
+    [SerializeField] private float damageIncreasePerLevel;
+    [SerializeField] private GameObject rangeIndicator;
     private Animator animator;
-    public TargetingPriority targetingPriority = TargetingPriority.First;
-    [SerializeField] public Sprite icon;
+    [SerializeField] private TargetingPriority targetingPriority = TargetingPriority.First;
+    [SerializeField] private Sprite icon;
     private bool isAbleToAttack = true;
-    public int placementCost;
+    [SerializeField] private int placementCost;
 
+    public int PlacementCost => placementCost;
+    public Sprite Icon => icon;
 
-    // Add a Unity event for detecting when the GameObject is clicked. This has to be called in Awake or Start.
+    private void Awake()
+    {
+        rangeCollider = GetComponent<CircleCollider2D>();
+        rangeCollider.isTrigger = true;
+        rangeCollider.radius = attackRange;
+        rangeCollider.enabled = false;
+        animator = GetComponent<Animator>();
+    }
+
     private void Start()
     {
-        gameObject.AddComponent<BoxCollider2D>(); // Adding a 2D collider for click detection
-        rangeCollider = gameObject.AddComponent<CircleCollider2D>();
-        rangeCollider.isTrigger = true; // Make sure it won't interfere with physics
-        rangeCollider.radius = attackRange;
-        rangeCollider.enabled = false; // Disable it initially
-        animator = GetComponent<Animator>();
+        // Further initialization if needed
     }
 
     private void OnMouseDown()
@@ -57,64 +64,38 @@ public class Unit : MonoBehaviour
         ShowRange(true);
     }
 
-    // Call this method to enable/disable attacking
     public void EnableAttacking(bool enable)
     {
         isAbleToAttack = enable;
-        if (!enable)
-        {
-            CancelInvoke(nameof(AttackRoutine)); // Stop attack routine when not able to attack
-        }
-        else if (!IsInvoking(nameof(AttackRoutine)))
-        {
-            InvokeRepeating(nameof(AttackRoutine), 0f, 1 / attackSpeed); // Resume attack routine
-        }
+        if (enable)
+            StartCoroutine(AttackRoutine());
+        else
+            StopCoroutine(AttackRoutine());
     }
 
     public void ShowRange(bool show)
     {
-        if (show)
-        {
-            // Scale the rangeIndicator radius to match the attackRange.
-            // Assumes that the radius indicator is set up to be correct for a radius of 1 unit.
-            rangeIndicator.transform.localScale = Vector3.one * attackRange * 2; // Multiply by 2 for diameter
-            rangeIndicator.SetActive(true);
-        }
-        else
-        {
-            rangeIndicator.SetActive(false);
-        }
+        rangeIndicator.transform.localScale = Vector3.one * attackRange * 2;
+        rangeIndicator.SetActive(show);
     }
 
-    private void AttackRoutine()
+    public void ChangeRangeIndicatorColor(Color newColor)
     {
-        // Your existing attack logic, potentially moved from Update
-        // Make sure you still check `isAbleToAttack` before actually attacking
-        if (!isAbleToAttack)
-            return;
-
-        Enemy target = FindTarget();
-        if (target != null)
-        {
-            FaceTarget(target);
-            Attack(target);
-        }
+        rangeIndicator.GetComponent<SpriteRenderer>().color = newColor;
     }
 
-    void Update()
+    private IEnumerator AttackRoutine()
     {
-        // attackTimer += Time.deltaTime;
-        // if (attackTimer >= 1 / attackSpeed)
-        // {
-        //     // Before attacking, ensure there is a target to face towards
-        //     Enemy target = FindTarget();
-        //     if (target != null)
-        //     {
-        //         FaceTarget(target);
-        //         Attack(target);
-        //         attackTimer = 0f;
-        //     }
-        // }
+        while (isAbleToAttack)
+        {
+            Enemy target = FindTarget();
+            if (target != null)
+            {
+                FaceTarget(target);
+                Attack(target);
+            }
+            yield return new WaitForSeconds(1 / attackSpeed);
+        }
     }
 
     void Attack(Enemy target)
@@ -122,26 +103,14 @@ public class Unit : MonoBehaviour
         GameObject newProjectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
         Projectile projectile = newProjectile.GetComponent<Projectile>();
         projectile.Initialize(target, GetCurrentDamage());
-
-        // Trigger the attack animation only if a projectile is being shot
         animator.SetTrigger("Attack");
     }
 
-    // Face towards the target by flipping the sprite on the X axis
     void FaceTarget(Enemy target)
     {
-        if (target != null)
-        {
-            Vector3 toTarget = target.transform.position - transform.position;
-            if (toTarget.x < 0)
-            {
-                transform.localScale = new Vector3(-1, 1, 1);
-            }
-            else if (toTarget.x > 0)
-            {
-                transform.localScale = new Vector3(1, 1, 1);
-            }
-        }
+        if (target == null) return;
+        Vector3 toTarget = target.transform.position - transform.position;
+        transform.right = toTarget.x >= 0 ? Vector3.right : Vector3.left;
     }
 
     Enemy FindTarget()
@@ -229,17 +198,14 @@ public class Unit : MonoBehaviour
 
     public void UpgradeUnit()
     {
-        if (upgradeLevel < maxUpgradeLevel && GameManager.Instance.Gold >= upgradeCost)
+        if (CanUpgrade())
         {
-            if (GameManager.Instance.SpendGold(upgradeCost))
-            {
-                upgradeLevel++;
-                ApplyUpgrade();
-            }
+            upgradeLevel++;
+            ApplyUpgrade();
+            GameManager.Instance.SpendGold(upgradeCost);
         }
     }
 
-    // Call this method to calculate the current damage based on the upgrade level
     private float GetCurrentDamage()
     {
         return baseDamage + (upgradeLevel * damageIncreasePerLevel);
@@ -247,30 +213,22 @@ public class Unit : MonoBehaviour
 
     private void ApplyUpgrade()
     {
-        // Upgrade logic, like increasing damage or attack speed
-        attackSpeed += 0.5f; // For example purposes
-                             // Possible further effects or animations for the upgrade
+        // Upgrade logic
+        attackSpeed += 0.5f; // Adjustment for example purposes
     }
 
     public bool CanUpgrade()
     {
-        if (GameManager.Instance.Gold >= upgradeCost && upgradeLevel < maxUpgradeLevel)
-        {
-            return true;
-        }
-
-        return false;
+        return GameManager.Instance.Gold >= upgradeCost && upgradeLevel < maxUpgradeLevel;
     }
 
     public int GetUpgradeCost()
     {
-        // Return current upgrade cost based on the level or some other logic.
-        return upgradeCost; // Assuming you have a field named upgradeCost.
+        return upgradeCost;
     }
 
-    private void Idle() // You'll need to call this when the unit is not attacking
+    private void Idle() // Call this when the unit is not attacking
     {
-        // Trigger the idle animation
         animator.SetTrigger("Idle");
     }
 }

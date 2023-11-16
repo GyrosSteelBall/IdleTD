@@ -74,7 +74,7 @@ public class UIManager : MonoBehaviour
     {
         foreach (var hotbarItem in hotbarItems)
         {
-            hotbarItem.Button.interactable = GameManager.Instance.Gold >= hotbarItem.Unit.placementCost;
+            hotbarItem.Button.interactable = GameManager.Instance.Gold >= hotbarItem.Unit.PlacementCost;
         }
     }
 
@@ -84,7 +84,7 @@ public class UIManager : MonoBehaviour
         hotbarItems.ForEach(item => Destroy(item.GameObject));
         hotbarItems.Clear();
 
-        var sortedUnits = availableUnits.OrderBy(unit => unit.placementCost);
+        var sortedUnits = availableUnits.OrderBy(unit => unit.PlacementCost);
 
         foreach (Unit unit in sortedUnits)
         {
@@ -98,8 +98,8 @@ public class UIManager : MonoBehaviour
             };
 
             hotbarItem.Button.onClick.AddListener(() => unitPlacementManager.StartPlacingUnit(unit));
-            hotbarItemObject.transform.Find("UnitSprite").GetComponent<Image>().sprite = unit.icon;
-            hotbarItemObject.transform.Find("GoldText").GetComponent<TextMeshProUGUI>().text = unit.placementCost.ToString();
+            hotbarItemObject.transform.Find("UnitSprite").GetComponent<Image>().sprite = unit.Icon;
+            hotbarItemObject.transform.Find("GoldText").GetComponent<TextMeshProUGUI>().text = unit.PlacementCost.ToString();
 
             hotbarItems.Add(hotbarItem);
         }
