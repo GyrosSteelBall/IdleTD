@@ -92,7 +92,7 @@ public class UnitPlacementManager : MonoBehaviour
         }
         tempUnitInstance = null;
         isPlacingUnit = false;
-        UIManager.instance.DeselectUnit();
+        UIManager.Instance.DeselectUnit();
     }
 
 }

@@ -2,125 +2,144 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
-using System;
+using System.Linq;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager instance;
+    private static UIManager _instance;
+    public static UIManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<UIManager>();
+            }
+            return _instance;
+        }
+    }
 
     [SerializeField]
-    private TextMeshProUGUI goldText; // UI text showing current gold.
+    private TextMeshProUGUI goldText;
     [SerializeField]
-    private Button upgradeButton; // Button used to upgrade the selected unit.
+    private Button upgradeButton;
     [SerializeField]
-    private TextMeshProUGUI upgradeButtonText; // Text on the upgrade button displaying cost.
+    private TextMeshProUGUI upgradeButtonText;
 
-    private Unit selectedUnit; // The currently selected unit.
-    [SerializeField] private Transform hotbarPanelTransform; // Parent transform of the hotbar items
-    [SerializeField] private GameObject hotbarItemPrefab; // The UI prefab that represents a unit in the hotbar
-    [SerializeField] private List<Unit> availableUnits; //Configure this for now, later needs to be dynamic based on player's team
+    private Unit selectedUnit;
+    [SerializeField] private Transform hotbarPanelTransform;
+    [SerializeField] private GameObject hotbarItemPrefab;
+    [SerializeField] private List<Unit> availableUnits;
     public UnitPlacementManager unitPlacementManager;
-    private List<GameObject> hotbarItems = new List<GameObject>(); // List to keep track of all hotbar items
+
+    private List<HotbarItem> hotbarItems = new List<HotbarItem>();
 
     private void Awake()
     {
-        if (instance == null)
+        if (_instance == null)
         {
-            instance = this;
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
         }
-        else if (instance != this)
+        else if (_instance != this)
         {
             Destroy(gameObject);
         }
 
-        DontDestroyOnLoad(gameObject);
-
         upgradeButton.onClick.AddListener(OnUpgradeButtonClick);
+
         PopulateHotbar(availableUnits);
     }
 
-    void Update()
+    private void Update()
     {
-        // Update the UI for the gold display.
-        goldText.text = "Gold: " + GameManager.Instance.Gold;
+        goldText.text = $"Gold: {GameManager.Instance.Gold}";
 
-        // Update the interactability and text of the upgrade button.
-        if (selectedUnit != null)
-        {
-            upgradeButtonText.text = $"Upgrade ({selectedUnit.GetUpgradeCost()} Gold)"; // Show the cost of the upgrade.
-        }
+        var canUpgrade = selectedUnit?.CanUpgrade() == true;
+        upgradeButton.interactable = canUpgrade;
 
-        if (selectedUnit != null && selectedUnit.CanUpgrade())
+        if (canUpgrade)
         {
-            upgradeButton.interactable = true;
+            upgradeButtonText.text = $"Upgrade ({selectedUnit.GetUpgradeCost()} Gold)";
         }
         else
         {
-            upgradeButton.interactable = false; // Make sure we can't interact with the button if we can't upgrade.
+            upgradeButtonText.text = "Upgrade";
         }
-        UpdateHotbarItems(); // Update the hotbar items based on the current gold amount
+
+        UpdateHotbarItems();
     }
 
     private void UpdateHotbarItems()
     {
-        foreach (GameObject hotbarItem in hotbarItems)
+        foreach (var hotbarItem in hotbarItems)
         {
-            int unitPlacementCost = int.Parse(hotbarItem.transform.Find("GoldText").GetComponent<TextMeshProUGUI>().text);
-            hotbarItem.GetComponent<Button>().interactable = GameManager.Instance.Gold >= unitPlacementCost; //May need refactoring
+            hotbarItem.Button.interactable = GameManager.Instance.Gold >= hotbarItem.Unit.placementCost;
         }
     }
 
     public void PopulateHotbar(List<Unit> availableUnits)
     {
-        hotbarItems.Clear(); // Clear the existing list
+        // Clear existing hotbar items
+        hotbarItems.ForEach(item => Destroy(item.GameObject));
+        hotbarItems.Clear();
 
-        // Sort the availableUnits list by ascending placementCost
-        availableUnits.Sort((unit1, unit2) => unit1.placementCost.CompareTo(unit2.placementCost));
+        var sortedUnits = availableUnits.OrderBy(unit => unit.placementCost);
 
-        foreach (Unit unit in availableUnits)
+        foreach (Unit unit in sortedUnits)
         {
-            GameObject hotbarItem = Instantiate(hotbarItemPrefab, hotbarPanelTransform);
-            hotbarItem.transform.Find("UnitSprite").GetComponent<Image>().sprite = unit.icon;
-            hotbarItem.transform.Find("GoldText").GetComponent<TextMeshProUGUI>().text = unit.placementCost.ToString();
-            hotbarItem.GetComponent<Button>().onClick.AddListener(() => unitPlacementManager.StartPlacingUnit(unit));
+            GameObject hotbarItemObject = Instantiate(hotbarItemPrefab, hotbarPanelTransform);
 
-            hotbarItems.Add(hotbarItem); // Add the item to the list
+            var hotbarItem = new HotbarItem
+            {
+                GameObject = hotbarItemObject,
+                Button = hotbarItemObject.GetComponent<Button>(),
+                Unit = unit
+            };
+
+            hotbarItem.Button.onClick.AddListener(() => unitPlacementManager.StartPlacingUnit(unit));
+            hotbarItemObject.transform.Find("UnitSprite").GetComponent<Image>().sprite = unit.icon;
+            hotbarItemObject.transform.Find("GoldText").GetComponent<TextMeshProUGUI>().text = unit.placementCost.ToString();
+
+            hotbarItems.Add(hotbarItem);
         }
     }
 
     public void SetSelectedUnit(Unit unit)
     {
-        selectedUnit?.ShowRange(false); // Safe-call operator in case selectedUnit is null.
+        selectedUnit?.ShowRange(false);
         selectedUnit = unit;
-        selectedUnit.ShowRange(true);
+        selectedUnit?.ShowRange(true);
         UpdateUIForSelection(unit);
     }
 
     public void UpdateUIForSelection(Unit unit)
     {
-        // Here you update the whole UI with the information of the new selected unit.
-        // Update the text or other UI elements you might have for your selection.
+        // Update UI
     }
 
     public void OnUpgradeButtonClick()
     {
-        if (selectedUnit?.CanUpgrade() ?? false)
+        if (selectedUnit?.CanUpgrade() == true)
         {
-            selectedUnit?.UpgradeUnit();
-            UpdateUIForSelection(selectedUnit); // Refresh UI after upgrade to reflect changes.
+            selectedUnit.UpgradeUnit();
+            UpdateUIForSelection(selectedUnit);
         }
     }
 
     public void DeselectUnit()
     {
-        if (selectedUnit != null)
-        {
-            selectedUnit.ShowRange(false); // Hide the range of the previously selected unit
-            selectedUnit = null; // Clear the currently selected unit
+        selectedUnit?.ShowRange(false);
+        selectedUnit = null;
 
-            // Optionally clear the upgrade button or other selection-specific UI elements
-            upgradeButton.interactable = false;
-            upgradeButtonText.text = "Upgrade";
-        }
+        upgradeButton.interactable = false;
+        upgradeButtonText.text = "Upgrade";
+    }
+
+    private class HotbarItem
+    {
+        public GameObject GameObject { get; set; }
+        public Button Button { get; set; }
+        public Unit Unit { get; set; }
     }
 }

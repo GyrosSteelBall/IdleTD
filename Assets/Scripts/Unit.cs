@@ -52,8 +52,8 @@ public class Unit : MonoBehaviour
 
     private void SelectUnit()
     {
-        UIManager.instance.SetSelectedUnit(this);
-        UIManager.instance.UpdateUIForSelection(this);
+        UIManager.Instance.SetSelectedUnit(this);
+        UIManager.Instance.UpdateUIForSelection(this);
         ShowRange(true);
     }
 

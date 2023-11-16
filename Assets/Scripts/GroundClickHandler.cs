@@ -31,7 +31,7 @@ public class GroundClickHandler : MonoBehaviour
             if (!hit || hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
             {
                 // If nothing is hit, or it hits the "Ground" layer, then deselect the unit
-                UIManager.instance.DeselectUnit();
+                UIManager.Instance.DeselectUnit();
             }
         }
     }
