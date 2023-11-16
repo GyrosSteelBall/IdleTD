@@ -77,7 +77,7 @@ public class UnitPlacementManager : MonoBehaviour
         currentUnitInstance.ShowRange(false); // Hide the range after placing, unless you want it always visible
 
         // Pay for the unit if there is a cost associated
-        GameManager.instance.SpendGold(currentUnitInstance.placementCost);
+        GameManager.Instance.SpendGold(currentUnitInstance.placementCost);
 
         tempUnitInstance = null; // Clear the previous temporary instance reference
         isPlacingUnit = false;

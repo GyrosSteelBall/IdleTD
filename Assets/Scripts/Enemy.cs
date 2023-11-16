@@ -4,18 +4,18 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-
     [Header("Dependencies")]
     [SerializeField] private Slider healthBarSlider;
+
     [Header("Attributes")]
-    public float speed;
-    public float health;
-    public float maxHealth; // Set this value to the enemy's maximum health
+    [SerializeField] private float speed;
+    [SerializeField] private float health;
+    [SerializeField] private float maxHealth;
+    [SerializeField] private int goldValue;
 
     private Path path;
     private int currentWaypointIndex = 0;
-    public int goldValue;
-    private float distanceTraveled; // Total distance traveled along the path
+    private float distanceTraveled;
 
     [Header("Damage Feedback")]
     [SerializeField] private SpriteRenderer enemySpriteRenderer;
@@ -25,32 +25,31 @@ public class Enemy : MonoBehaviour
     private Coroutine damageCoroutine;
 
     [Header("Animations")]
-    [SerializeField] private Animator animator; // Assign this in the Inspector
-    [SerializeField] private string runAnimationName = "Run"; // Animator trigger for the running animation
-    [SerializeField] private string deathAnimationName = "Die"; // Animator trigger for the death animation
-    [SerializeField] private float deathAnimationDuration = 1.6f; // Duration in seconds
-    public bool IsDead { get; private set; } = false;
+    [SerializeField] private Animator animator;
+    private static readonly int RunAnimationHash = Animator.StringToHash("Run");
+    private static readonly int DeathAnimationHash = Animator.StringToHash("Die");
+    private const float DeathAnimationDuration = 1.6f;
 
-    // Property to access distance traveled
-    public float DistanceAlongPath
+    public bool IsDead { get; private set; }
+    public float DistanceAlongPath => distanceTraveled;
+
+    private void Awake()
     {
-        get { return distanceTraveled; }
+        defaultMaterial = enemySpriteRenderer.sharedMaterial;
+        blinkMaterial = new Material(Shader.Find("GUI/Text Shader"));
     }
 
     private void Start()
     {
-        // Find the Path script in the scene and assign it as the enemy’s path
         path = FindObjectOfType<Path>();
-        if (path == null)
-        {
-            Debug.LogError("No Path script found in the scene.");
-        }
-
-        // Initialize the health bar
         healthBarSlider.maxValue = maxHealth;
         healthBarSlider.value = health;
 
-        distanceTraveled = 0f; // Starting with zero distance
+        if (path == null)
+        {
+            Debug.LogError("No Path script found in the scene.");
+            enabled = false; // Disable script if no path
+        }
     }
 
     void Update()
@@ -58,110 +57,90 @@ public class Enemy : MonoBehaviour
         if (!IsDead)
         {
             Move();
-            UpdateAnimationDirection();
         }
     }
 
-    void Move()
+    private void Move()
     {
-        if (currentWaypointIndex < path.waypoints.Length)
+        if (currentWaypointIndex >= path.waypoints.Length)
         {
-            Transform targetWaypoint = path.waypoints[currentWaypointIndex];
-            Vector3 previousPosition = transform.position;
-            Vector3 direction = Vector3.MoveTowards(transform.position, targetWaypoint.position, speed * Time.deltaTime) - transform.position;
-
-            if (direction != Vector3.zero)
-            {
-                // For 2D sprites in a 2D game
-                enemySpriteRenderer.flipX = direction.x < 0;
-            }
-
-            transform.position += direction;
-
-            // Add the distance moved this frame to the total distance traveled
-            distanceTraveled += Vector3.Distance(previousPosition, transform.position);
-
-            if (transform.position == targetWaypoint.position)
-            {
-                currentWaypointIndex++;
-            }
-
-            // Play running animation if not already playing
-            if (!animator.GetCurrentAnimatorStateInfo(0).IsName(runAnimationName))
-            {
-                animator.SetTrigger(runAnimationName);
-            }
+            return;
         }
+
+        var targetWaypoint = path.waypoints[currentWaypointIndex];
+        var previousPosition = transform.position;
+        transform.position = Vector3.MoveTowards(previousPosition, targetWaypoint.position, speed * Time.deltaTime);
+
+        distanceTraveled += Vector3.Distance(previousPosition, transform.position);
+
+        if (transform.position == targetWaypoint.position)
+        {
+            currentWaypointIndex++;
+        }
+
+        UpdateAnimation(RunAnimationHash);
+        UpdateSpriteDirection(previousPosition);
     }
 
-    void UpdateAnimationDirection()
+    private void UpdateSpriteDirection(Vector3 previousPosition)
     {
-        // Depending on your game, you may need more complex logic to determine the facing direction (e.g., 8-way movement)
+        float deltaX = transform.position.x - previousPosition.x;
+        enemySpriteRenderer.flipX = deltaX < 0;
+    }
+
+    private void UpdateAnimation(int animationHash)
+    {
+        if (animator.GetCurrentAnimatorStateInfo(0).shortNameHash != animationHash)
+        {
+            animator.SetTrigger(animationHash);
+        }
     }
 
     public void TakeDamage(float damage)
     {
-        if (!IsDead)
-        {
-            health -= damage;
-            healthBarSlider.value = health; // Update the slider value whenever the enemy takes damage
-            Blink();
-            if (health <= 0)
-            {
-                Die();
-            }
-        }
+        if (IsDead) return;
+
+        health -= damage;
+        healthBarSlider.value = health;
+        Blink();
+
+        if (health <= 0) Die();
     }
 
     public void Blink()
     {
-        if (defaultMaterial == null) defaultMaterial = enemySpriteRenderer.sharedMaterial;
-        if (blinkMaterial == null) blinkMaterial = new Material(Shader.Find("GUI/Text Shader"));
-
-        if (damageCoroutine != null)
-        {
-            StopCoroutine(damageCoroutine);
-        }
+        if (damageCoroutine != null) StopCoroutine(damageCoroutine);
         damageCoroutine = StartCoroutine(BlinkCoroutine());
     }
 
     private IEnumerator BlinkCoroutine()
     {
         enemySpriteRenderer.material = blinkMaterial;
-
         yield return new WaitForSeconds(0.1f);
-
         enemySpriteRenderer.material = defaultMaterial;
     }
 
-    void Die()
+    private void Die()
     {
-        IsDead = true; // Stop the enemy from moving or performing actions
-        // Play the death animation
-        animator.SetTrigger(deathAnimationName);
-        DropResources(); // Drop resources before cleanup
-
-        // Start the coroutine to wait before removal
-        StartCoroutine(WaitBeforeRemoval(deathAnimationDuration));
+        IsDead = true;
+        UpdateAnimation(DeathAnimationHash);
+        DropResources();
+        StartCoroutine(WaitBeforeRemoval(DeathAnimationDuration));
     }
 
-    IEnumerator WaitBeforeRemoval(float delay)
+    private IEnumerator WaitBeforeRemoval(float delay)
     {
-        // Wait for the specified delay
         yield return new WaitForSeconds(delay);
-
-        // Call the cleanup method after the delay
         RemoveEnemy();
     }
 
-    public void RemoveEnemy()
+    private void RemoveEnemy()
     {
-        // Logic to handle the enemy's cleanup after death
         Destroy(gameObject);
     }
 
-    void DropResources()
+    private void DropResources()
     {
-        GameManager.instance.gold += goldValue;
+        GameManager.Instance.AddGold(goldValue); // Assuming AddGold is a method that safely adds gold to the GameManager.
     }
 }

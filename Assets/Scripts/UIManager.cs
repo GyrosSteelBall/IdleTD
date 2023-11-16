@@ -42,7 +42,7 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         // Update the UI for the gold display.
-        goldText.text = "Gold: " + GameManager.instance.gold;
+        goldText.text = "Gold: " + GameManager.Instance.Gold;
 
         // Update the interactability and text of the upgrade button.
         if (selectedUnit != null)
@@ -66,7 +66,7 @@ public class UIManager : MonoBehaviour
         foreach (GameObject hotbarItem in hotbarItems)
         {
             int unitPlacementCost = int.Parse(hotbarItem.transform.Find("GoldText").GetComponent<TextMeshProUGUI>().text);
-            hotbarItem.GetComponent<Button>().interactable = GameManager.instance.gold >= unitPlacementCost; //May need refactoring
+            hotbarItem.GetComponent<Button>().interactable = GameManager.Instance.Gold >= unitPlacementCost; //May need refactoring
         }
     }
 

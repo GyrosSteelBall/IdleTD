@@ -8896,8 +8896,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 709a8375613171c4cbf9f4326caba23d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gold: 10
-  lives: 0
+  startingGold: 20
+  startingLives: 10
   waves:
   - {fileID: 1970238986}
   - {fileID: 1575909966}

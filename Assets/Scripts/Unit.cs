@@ -229,11 +229,13 @@ public class Unit : MonoBehaviour
 
     public void UpgradeUnit()
     {
-        if (upgradeLevel < maxUpgradeLevel && GameManager.instance.gold >= upgradeCost)
+        if (upgradeLevel < maxUpgradeLevel && GameManager.Instance.Gold >= upgradeCost)
         {
-            GameManager.instance.gold -= upgradeCost;
-            upgradeLevel++;
-            ApplyUpgrade();
+            if (GameManager.Instance.SpendGold(upgradeCost))
+            {
+                upgradeLevel++;
+                ApplyUpgrade();
+            }
         }
     }
 
@@ -252,7 +254,7 @@ public class Unit : MonoBehaviour
 
     public bool CanUpgrade()
     {
-        if (GameManager.instance.gold >= upgradeCost && upgradeLevel < maxUpgradeLevel)
+        if (GameManager.Instance.Gold >= upgradeCost && upgradeLevel < maxUpgradeLevel)
         {
             return true;
         }
