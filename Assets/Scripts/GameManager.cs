@@ -80,6 +80,15 @@ public class GameManager : MonoBehaviour
         return false; // Return a boolean to indicate if the gold was successfully spent.
     }
 
+    public bool CanSpendGold(int amount)
+    {
+        if (Gold - amount >= 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
     // A method for adding gold that can be invoked by other scripts, consistent with encapsulation.
     public void AddGold(int amount)
     {

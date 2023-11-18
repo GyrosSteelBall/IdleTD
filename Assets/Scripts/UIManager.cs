@@ -21,10 +21,6 @@ public class UIManager : MonoBehaviour
 
     [SerializeField]
     private TextMeshProUGUI goldText;
-    [SerializeField]
-    private Button upgradeButton;
-    [SerializeField]
-    private TextMeshProUGUI upgradeButtonText;
 
     private Unit selectedUnit;
     [SerializeField] private Transform hotbarPanelTransform;
@@ -33,6 +29,11 @@ public class UIManager : MonoBehaviour
     public UnitPlacementManager unitPlacementManager;
 
     private List<HotbarItem> hotbarItems = new List<HotbarItem>();
+    [SerializeField] private GameObject upgradePanel;
+    [SerializeField] private Button[] upgradeButtons; // Assume you've set this up to match the upgrade paths in the unit.
+    [SerializeField] private TextMeshProUGUI[] upgradeNamesTexts;      // Array of UI Texts to show upgrade names.
+    [SerializeField] private TextMeshProUGUI[] upgradeDescriptionsTexts; // Array of UI Texts to show upgrade descriptions.
+    [SerializeField] private TextMeshProUGUI[] upgradeCostTexts;          // Array of UI Texts to show costs.
 
     private void Awake()
     {
@@ -45,29 +46,77 @@ public class UIManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        upgradeButton.onClick.AddListener(OnUpgradeButtonClick);
-
+        upgradePanel.SetActive(false);
         PopulateHotbar(availableUnits);
     }
 
     private void Update()
     {
         goldText.text = $"Gold: {GameManager.Instance.Gold}";
-
-        var canUpgrade = selectedUnit?.CanUpgrade() == true;
-        upgradeButton.interactable = canUpgrade;
-
-        if (canUpgrade)
-        {
-            upgradeButtonText.text = $"Upgrade ({selectedUnit.GetUpgradeCost()} Gold)";
-        }
-        else
-        {
-            upgradeButtonText.text = "Upgrade";
-        }
-
         UpdateHotbarItems();
+
+        UpdateUpgradeButtonInteractability();
+    }
+
+    public void DisplayUpgradesForUnit(Unit unit)
+    {
+        // Hide the upgrade panel if there's no selected unit
+        if (unit == null)
+        {
+            upgradePanel.SetActive(false);
+            return;
+        }
+
+        selectedUnit = unit;
+        upgradePanel.SetActive(true);
+
+        // Loop through all potential upgrade buttons
+        for (int i = 0; i < upgradeButtons.Length; i++)
+        {
+            // Remove any existing onClick listeners to prevent stacking listeners
+            upgradeButtons[i].onClick.RemoveAllListeners();
+
+            // Check if there is a corresponding upgrade path and level
+            if (i < unit.UpgradePaths.Count && unit.UpgradeLevelsPerPath[i] < unit.UpgradePaths[i].upgradeSteps.Count)
+            {
+                UpgradeEffect currentStep = unit.UpgradePaths[i].upgradeSteps[unit.UpgradeLevelsPerPath[i]];
+                UpgradeEffect effect = currentStep;
+
+                upgradeButtons[i].gameObject.SetActive(true);
+
+                // Update UI Elements with the current upgrade's information
+                upgradeNamesTexts[i].text = effect.effectName;
+                upgradeDescriptionsTexts[i].text = currentStep.description; // Assumes description is in UpgradeStep
+                upgradeCostTexts[i].text = effect.cost.ToString();
+
+                // Set the button interactability based on upgrade availability
+                upgradeButtons[i].interactable = unit.IsUpgradeAvailable(i);
+
+                // Bind the OnUpgradeButtonClicked method to the button with the correct path index
+                int pathIndex = i;
+                upgradeButtons[i].onClick.AddListener(() => OnUpgradeButtonClicked(pathIndex));
+            }
+            else
+            {
+                // Maximum upgrades reached for this path
+                upgradeNamesTexts[i].text = "Upgrade Complete";
+                upgradeDescriptionsTexts[i].text = "All upgrades purchased for this path";
+                upgradeCostTexts[i].text = ""; // Clear the cost text
+                upgradeButtons[i].interactable = false; // Button no longer needs to be interactable
+            }
+        }
+
+        UpdateUpgradeButtonInteractability();
+    }
+
+    public void OnUpgradeButtonClicked(int pathIndex)
+    {
+        // Call ApplyUpgrade from Unit and pass the path index.
+        if (selectedUnit != null && selectedUnit.IsUpgradeAvailable(pathIndex))
+        {
+            selectedUnit.ApplyUpgrade(pathIndex);
+            DisplayUpgradesForUnit(selectedUnit);
+        }
     }
 
     private void UpdateHotbarItems()
@@ -115,15 +164,20 @@ public class UIManager : MonoBehaviour
 
     public void UpdateUIForSelection(Unit unit)
     {
-        // Update UI
+        DisplayUpgradesForUnit(unit);
     }
 
-    public void OnUpgradeButtonClick()
+    public void UpdateUpgradeButtonInteractability()
     {
-        if (selectedUnit?.CanUpgrade() == true)
+        if (selectedUnit == null) return;
+
+        // Update the interactability of the upgrade buttons for the selected unit
+        for (int i = 0; i < selectedUnit.UpgradePaths.Count; i++)
         {
-            selectedUnit.UpgradeUnit();
-            UpdateUIForSelection(selectedUnit);
+            if (i < upgradeButtons.Length)
+            {
+                upgradeButtons[i].interactable = selectedUnit.IsUpgradeAvailable(i);
+            }
         }
     }
 
@@ -131,9 +185,7 @@ public class UIManager : MonoBehaviour
     {
         selectedUnit?.ShowRange(false);
         selectedUnit = null;
-
-        upgradeButton.interactable = false;
-        upgradeButtonText.text = "Upgrade";
+        upgradePanel.SetActive(false);
     }
 
     private class HotbarItem

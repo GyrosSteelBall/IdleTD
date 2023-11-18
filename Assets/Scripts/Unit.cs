@@ -23,11 +23,7 @@ public class Unit : MonoBehaviour
     [SerializeField] private float attackRange;
     private CircleCollider2D rangeCollider;
     private float attackTimer = 0f;
-    private int upgradeLevel = 0;
-    [SerializeField] private int upgradeCost;
-    [SerializeField] private int maxUpgradeLevel;
     [SerializeField] private float baseDamage;
-    [SerializeField] private float damageIncreasePerLevel;
     [SerializeField] private GameObject rangeIndicator;
     private Animator animator;
     [SerializeField] private TargetingPriority targetingPriority = TargetingPriority.First;
@@ -37,6 +33,38 @@ public class Unit : MonoBehaviour
 
     public int PlacementCost => placementCost;
     public Sprite Icon => icon;
+    [Header("Upgrade Paths")]
+    // This list will now reference the UpgradePathSO scriptable objects.
+    [SerializeField] private List<UpgradePathSO> upgradePaths;
+    // Keep track of the upgrade level for each path.
+    private List<int> upgradeLevelsPerPath = new List<int>();
+    public List<UpgradePathSO> UpgradePaths => upgradePaths; // Read-only property to access upgrade paths.
+    public List<int> UpgradeLevelsPerPath => upgradeLevelsPerPath; // Read-only property to access current upgrade levels.
+    private float damage;
+    // Expose the necessary fields through public properties or methods.
+    public float AttackSpeed
+    {
+        get => attackSpeed;
+        set => attackSpeed = Mathf.Max(0, value); // Ensure attack speed doesn't go negative.
+    }
+
+    public float AttackRange
+    {
+        get => attackRange;
+        set
+        {
+            attackRange = Mathf.Max(0, value);
+            rangeCollider.radius = attackRange;
+            RedrawRangeIndicator();  // Update the range indicator visual when the range changes.
+        }
+    }
+
+    public float Damage
+    {
+        get => damage;
+        set => damage = Mathf.Max(0, value); // Ensure damage doesn't go negative.
+    }
+
 
     private void Awake()
     {
@@ -45,11 +73,66 @@ public class Unit : MonoBehaviour
         rangeCollider.radius = attackRange;
         rangeCollider.enabled = false;
         animator = GetComponent<Animator>();
+        damage = baseDamage;
     }
 
     private void Start()
     {
-        // Further initialization if needed
+        foreach (var path in upgradePaths)
+        {
+            upgradeLevelsPerPath.Add(0);  // Start with 0 upgrade levels per path.
+        }
+    }
+
+    // Method to apply an upgrade from a specific path.
+    public void ApplyUpgrade(int pathIndex)
+    {
+        if (pathIndex < upgradePaths.Count)
+        {
+            UpgradePathSO path = upgradePaths[pathIndex];
+            int stepIndex = upgradeLevelsPerPath[pathIndex];
+            if (stepIndex < path.upgradeSteps.Count && GameManager.Instance.CanSpendGold(path.upgradeSteps[stepIndex].cost))
+            {
+                UpgradeEffect upgradeEffect = path.upgradeSteps[stepIndex];
+                upgradeEffect.ApplyEffect(this);
+                GameManager.Instance.SpendGold(upgradeEffect.cost);
+                upgradeLevelsPerPath[pathIndex]++;
+            }
+        }
+    }
+
+    private void RedrawRangeIndicator()
+    {
+        if (rangeIndicator != null)
+        {
+            // Assuming rangeIndicator is a GameObject with a scale that represents the attack range visual.
+            rangeIndicator.transform.localScale = Vector3.one * attackRange * 2f;
+        }
+        // You may want to activate it momentarily to give visual feedback that the upgrade has been applied.
+        ShowRange(false);
+        ShowRange(true);
+    }
+
+    // Method to check if an upgrade is available for a specific path.
+    public bool IsUpgradeAvailable(int pathIndex)
+    {
+        if (pathIndex < upgradePaths.Count)
+        {
+            int stepIndex = upgradeLevelsPerPath[pathIndex];
+            if (stepIndex < upgradePaths[pathIndex].upgradeSteps.Count)
+            {
+                UpgradeEffect effect = upgradePaths[pathIndex].upgradeSteps[stepIndex];
+                return GameManager.Instance.CanSpendGold(effect.cost);
+            }
+        }
+        return false;
+    }
+
+    // Placeholder for increasing the Unit's damage.
+    // This should be called by specific UpgradeEffects, not directly.
+    public void IncreaseDamage(float amount)
+    {
+        baseDamage += amount;
     }
 
     private void OnMouseDown()
@@ -196,35 +279,9 @@ public class Unit : MonoBehaviour
         return closestEnemy;
     }
 
-    public void UpgradeUnit()
-    {
-        if (CanUpgrade())
-        {
-            upgradeLevel++;
-            ApplyUpgrade();
-            GameManager.Instance.SpendGold(upgradeCost);
-        }
-    }
-
     private float GetCurrentDamage()
     {
-        return baseDamage + (upgradeLevel * damageIncreasePerLevel);
-    }
-
-    private void ApplyUpgrade()
-    {
-        // Upgrade logic
-        attackSpeed += 0.5f; // Adjustment for example purposes
-    }
-
-    public bool CanUpgrade()
-    {
-        return GameManager.Instance.Gold >= upgradeCost && upgradeLevel < maxUpgradeLevel;
-    }
-
-    public int GetUpgradeCost()
-    {
-        return upgradeCost;
+        return damage;
     }
 
     private void Idle() // Call this when the unit is not attacking

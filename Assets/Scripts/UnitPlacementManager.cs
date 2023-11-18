@@ -78,6 +78,7 @@ public class UnitPlacementManager : MonoBehaviour
 
         // Pay for the unit if there is a cost associated
         GameManager.Instance.SpendGold(currentUnitInstance.PlacementCost);
+        UIManager.Instance.DeselectUnit();
 
         tempUnitInstance = null; // Clear the previous temporary instance reference
         isPlacingUnit = false;
