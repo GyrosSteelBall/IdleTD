@@ -1,44 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public enum TargetingPriority
-{
-    First,
-    Last,
-    Closest,
-    Strongest,
-    Weakest,
-    // ... add other targeting priorities here
-}
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(CircleCollider2D))]
 public class Unit : MonoBehaviour
 {
-    [Header("Unit Configuration")]
-    [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private float attackSpeed;
-    [SerializeField] private float attackRange;
+    [Header("Configuration Reference")]
+    [SerializeField] private UnitConfigSO config;
     private CircleCollider2D rangeCollider;
+    private GameObject currentProjectile;
     private float attackTimer = 0f;
-    [SerializeField] private float baseDamage;
+    private TargetingPriority currentTargetingPriority;
     [SerializeField] private GameObject rangeIndicator;
     private Animator animator;
-    [SerializeField] private TargetingPriority targetingPriority = TargetingPriority.First;
-    [SerializeField] private Sprite icon;
     private bool isAbleToAttack = true;
-    [SerializeField] private int placementCost;
-
-    public int PlacementCost => placementCost;
-    public Sprite Icon => icon;
-    [Header("Upgrade Paths")]
-    // This list will now reference the UpgradePathSO scriptable objects.
-    [SerializeField] private List<UpgradePathSO> upgradePaths;
-    // Keep track of the upgrade level for each path.
+    private float attackSpeed;
+    private float attackRange;
+    public int PlacementCost => config.placementCost;
+    public Sprite Icon => config.icon;
     private List<int> upgradeLevelsPerPath = new List<int>();
-    public List<UpgradePathSO> UpgradePaths => upgradePaths; // Read-only property to access upgrade paths.
+    public List<UpgradePathSO> UpgradePaths => config.upgradePaths; // Read-only property to access upgrade paths.
     public List<int> UpgradeLevelsPerPath => upgradeLevelsPerPath; // Read-only property to access current upgrade levels.
     private float damage;
     // Expose the necessary fields through public properties or methods.
@@ -70,15 +53,19 @@ public class Unit : MonoBehaviour
     {
         rangeCollider = GetComponent<CircleCollider2D>();
         rangeCollider.isTrigger = true;
-        rangeCollider.radius = attackRange;
+        rangeCollider.radius = config.baseAttackRange;
         rangeCollider.enabled = false;
         animator = GetComponent<Animator>();
-        damage = baseDamage;
+        damage = config.baseDamage;
+        attackSpeed = config.baseAttackSpeed;
+        attackRange = config.baseAttackRange;
+        currentProjectile = config.projectilePrefab;
+        currentTargetingPriority = config.targetingPriority;
     }
 
     private void Start()
     {
-        foreach (var path in upgradePaths)
+        foreach (var path in config.upgradePaths)
         {
             upgradeLevelsPerPath.Add(0);  // Start with 0 upgrade levels per path.
         }
@@ -87,9 +74,9 @@ public class Unit : MonoBehaviour
     // Method to apply an upgrade from a specific path.
     public void ApplyUpgrade(int pathIndex)
     {
-        if (pathIndex < upgradePaths.Count)
+        if (pathIndex < config.upgradePaths.Count)
         {
-            UpgradePathSO path = upgradePaths[pathIndex];
+            UpgradePathSO path = config.upgradePaths[pathIndex];
             int stepIndex = upgradeLevelsPerPath[pathIndex];
             if (stepIndex < path.upgradeSteps.Count && GameManager.Instance.CanSpendGold(path.upgradeSteps[stepIndex].cost))
             {
@@ -116,12 +103,12 @@ public class Unit : MonoBehaviour
     // Method to check if an upgrade is available for a specific path.
     public bool IsUpgradeAvailable(int pathIndex)
     {
-        if (pathIndex < upgradePaths.Count)
+        if (pathIndex < config.upgradePaths.Count)
         {
             int stepIndex = upgradeLevelsPerPath[pathIndex];
-            if (stepIndex < upgradePaths[pathIndex].upgradeSteps.Count)
+            if (stepIndex < config.upgradePaths[pathIndex].upgradeSteps.Count)
             {
-                UpgradeEffect effect = upgradePaths[pathIndex].upgradeSteps[stepIndex];
+                UpgradeEffect effect = config.upgradePaths[pathIndex].upgradeSteps[stepIndex];
                 return GameManager.Instance.CanSpendGold(effect.cost);
             }
         }
@@ -132,7 +119,7 @@ public class Unit : MonoBehaviour
     // This should be called by specific UpgradeEffects, not directly.
     public void IncreaseDamage(float amount)
     {
-        baseDamage += amount;
+        damage += amount;
     }
 
     private void OnMouseDown()
@@ -183,7 +170,7 @@ public class Unit : MonoBehaviour
 
     void Attack(Enemy target)
     {
-        GameObject newProjectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+        GameObject newProjectile = Instantiate(currentProjectile, transform.position, Quaternion.identity);
         Projectile projectile = newProjectile.GetComponent<Projectile>();
         projectile.Initialize(target, GetCurrentDamage());
         animator.SetTrigger("Attack");
@@ -202,7 +189,7 @@ public class Unit : MonoBehaviour
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, attackRange);
         Enemy target = null;
 
-        switch (targetingPriority)
+        switch (currentTargetingPriority)
         {
             case TargetingPriority.First:
                 target = FindFirst(colliders);

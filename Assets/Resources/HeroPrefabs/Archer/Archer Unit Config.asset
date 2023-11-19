@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ebd9fc72e7c15245ae21a9879279106, type: 3}
+  m_Name: Archer Unit Config
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 3022967056629886726, guid: 3fe723e5d75617045abbfe5c5a658539,
+    type: 3}
+  baseAttackSpeed: 1
+  baseAttackRange: 3
+  baseDamage: 20
+  icon: {fileID: 4723107735738678597, guid: df868cfcd61831c4c8a9a61a5220ee7b, type: 3}
+  placementCost: 10
+  targetingPriority: 0
+  upgradePaths: []

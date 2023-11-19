@@ -5999,8 +5999,7 @@ MonoBehaviour:
   hotbarItemPrefab: {fileID: 5066733430526059093, guid: ad80aac311cf17f4aa4413f6381e6b85,
     type: 3}
   availableUnits:
-  - {fileID: 1624314790774429658, guid: 027c7e9c7004b3040b1891cf791b1442, type: 3}
-  - {fileID: 1624314790774429658, guid: 025450c78395c8848971accfe627e166, type: 3}
+  - {fileID: 1624314790774429658, guid: cfee10b1ac5cf9244be9449a122d2e52, type: 3}
   unitPlacementManager: {fileID: 679728129}
   upgradePanel: {fileID: 1736926980}
   upgradeButtons:
