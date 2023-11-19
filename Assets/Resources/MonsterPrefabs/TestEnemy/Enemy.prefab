@@ -48,14 +48,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthBarSlider: {fileID: 1203904947496957415}
-  speed: 1
-  health: 100
-  maxHealth: 100
-  goldValue: 1
+  enemyConfig: {fileID: 11400000, guid: c5b77a6442f30a64b9283d47ccbbd9cb, type: 2}
+  damageFeedbackConfig: {fileID: 11400000, guid: 9010550c4c2b0854b96c41f5c5ec51e2,
+    type: 2}
   enemySpriteRenderer: {fileID: 7384824658887586958}
   animator: {fileID: 868357648117859000}
-  runAnimationName: Run
-  deathAnimationName: Die
 --- !u!61 &5642421797614169705
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -6,49 +6,56 @@ public class Enemy : MonoBehaviour
 {
     [Header("Dependencies")]
     [SerializeField] private Slider healthBarSlider;
-
-    [Header("Attributes")]
-    [SerializeField] private float speed;
-    [SerializeField] private float health;
-    [SerializeField] private float maxHealth;
-    [SerializeField] private int goldValue;
-
-    private Path path;
-    private int currentWaypointIndex = 0;
-    private float distanceTraveled;
+    [SerializeField] private EnemyConfigSO enemyConfig;
+    [SerializeField] private DamageFeedbackConfigSO damageFeedbackConfig;
 
     [Header("Damage Feedback")]
     [SerializeField] private SpriteRenderer enemySpriteRenderer;
-
-    private static Material defaultMaterial;
-    private static Material blinkMaterial;
     private Coroutine damageCoroutine;
 
     [Header("Animations")]
     [SerializeField] private Animator animator;
+
+    private Path path;
+    private int currentWaypointIndex = 0;
+    private float distanceTraveled;
+    private float health;
     private static readonly int RunAnimationHash = Animator.StringToHash("Run");
     private static readonly int DeathAnimationHash = Animator.StringToHash("Die");
     private const float DeathAnimationDuration = 1.6f;
+    private Material defaultMaterial;
 
     public bool IsDead { get; private set; }
     public float DistanceAlongPath => distanceTraveled;
 
     private void Awake()
     {
-        defaultMaterial = enemySpriteRenderer.sharedMaterial;
-        blinkMaterial = new Material(Shader.Find("GUI/Text Shader"));
+        if (enemySpriteRenderer != null)
+        {
+            defaultMaterial = enemySpriteRenderer.sharedMaterial;
+        }
+
+        health = enemyConfig != null ? enemyConfig.maxHealth : 100;
+
+        if (healthBarSlider != null)
+        {
+            healthBarSlider.maxValue = health;
+            healthBarSlider.value = health;
+        }
+
+        if (damageFeedbackConfig != null && damageFeedbackConfig.blinkMaterial == null)
+        {
+            damageFeedbackConfig.blinkMaterial = new Material(Shader.Find("GUI/Text Shader"));
+        }
     }
 
     private void Start()
     {
         path = FindObjectOfType<Path>();
-        healthBarSlider.maxValue = maxHealth;
-        healthBarSlider.value = health;
-
         if (path == null)
         {
             Debug.LogError("No Path script found in the scene.");
-            enabled = false; // Disable script if no path
+            enabled = false;
         }
     }
 
@@ -69,7 +76,7 @@ public class Enemy : MonoBehaviour
 
         var targetWaypoint = path.waypoints[currentWaypointIndex];
         var previousPosition = transform.position;
-        transform.position = Vector3.MoveTowards(previousPosition, targetWaypoint.position, speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(previousPosition, targetWaypoint.position, enemyConfig.speed * Time.deltaTime);
 
         distanceTraveled += Vector3.Distance(previousPosition, transform.position);
 
@@ -110,13 +117,13 @@ public class Enemy : MonoBehaviour
     public void Blink()
     {
         if (damageCoroutine != null) StopCoroutine(damageCoroutine);
-        damageCoroutine = StartCoroutine(BlinkCoroutine());
+        damageCoroutine = StartCoroutine(BlinkCoroutine(damageFeedbackConfig.blinkDuration));
     }
 
-    private IEnumerator BlinkCoroutine()
+    private IEnumerator BlinkCoroutine(float duration)
     {
-        enemySpriteRenderer.material = blinkMaterial;
-        yield return new WaitForSeconds(0.1f);
+        enemySpriteRenderer.material = damageFeedbackConfig.blinkMaterial;
+        yield return new WaitForSeconds(duration);
         enemySpriteRenderer.material = defaultMaterial;
     }
 
@@ -141,6 +148,6 @@ public class Enemy : MonoBehaviour
 
     private void DropResources()
     {
-        GameManager.Instance.AddGold(goldValue); // Assuming AddGold is a method that safely adds gold to the GameManager.
+        GameManager.Instance.AddGold(enemyConfig.goldValue); // Assuming AddGold is a method that safely adds gold to the GameManager.
     }
 }
