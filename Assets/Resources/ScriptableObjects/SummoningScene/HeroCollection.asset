@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4263d4e1ed1c76048a673956492fb65c, type: 3}
   m_Name: HeroCollection
   m_EditorClassIdentifier: 
-  herocollection: []
+  herocollection:
+  - Bowman
+  - Chef
+  - RoyalKnight

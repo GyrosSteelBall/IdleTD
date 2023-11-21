@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/TowerDefenseTestingScene.unity
+    path: Assets/Scenes/TowerDefenseTestingScene/TowerDefenseTestingScene.unity
     guid: c1439b8259841534fb1712d381cb3003
   - enabled: 1
     path: Assets/Scenes/Menu.unity
