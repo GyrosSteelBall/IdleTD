@@ -18,13 +18,14 @@ public class CombatHandler : MonoBehaviour
         }
     }
 
-    // Method called when direct damage is dealt, may need to be moved once IAttacker is implemented
+    // May need to be moved once IAttacker is implemented
     public enum DamageType
     {
         Physical,
         Magical
     }
 
+    // Method called when direct damage is dealt
     public void ProcessDirectDamage(IAttackable target, float rawDamage, DamageType damageType, ElementType attackerElementType)
     {
         if (target.IsInvulnerable)
@@ -32,8 +33,16 @@ public class CombatHandler : MonoBehaviour
             return; // Skip processing if the target is invulnerable
         }
 
+        // Check if the target evades the attack
+        if (EvadeAttack(target))
+        {
+            // The attack was evaded; you can broadcast an event or take some other action as needed
+            // For example: CombatEvents.Instance.AttackEvaded(target);
+            return; // Skip further damage processing
+        }
+
         // Apply percent damage reduction first, as this is the primary tanking stat
-        float effectiveDamage = rawDamage * (1 - target.PercentDamageReduction);
+        float effectiveDamage = rawDamage * (1f - (target.PercentDamageReduction / 100f));
 
         // Apply elemental bonus or penalty based on the attacker's and target's elemental types
         effectiveDamage *= CalculateElementalBonus(attackerElementType, target.ElementalType);
@@ -51,6 +60,16 @@ public class CombatHandler : MonoBehaviour
 
         // Apply the final calculated damage to the target
         target.TakeDamage(effectiveDamage);
+    }
+
+    // Method to determine if an attack hits or is evaded
+    public bool EvadeAttack(IAttackable target)
+    {
+        // Generate a random number between 0 and 1
+        float roll = Random.Range(0f, 100f);
+
+        // If the roll is less than the target's evasion chance, the attack is evaded
+        return roll < target.PercentEvadeChance;
     }
 
     // Helper method to calculate the damage reduction based on armor/magic resistance
