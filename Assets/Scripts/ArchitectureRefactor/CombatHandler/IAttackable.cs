@@ -3,7 +3,7 @@ public enum ElementType
     Fire,
     Water,
     Earth,
-    Air,
+    Lightning,
     Light,
     Dark,
     // Add as many as necessary for your game design
