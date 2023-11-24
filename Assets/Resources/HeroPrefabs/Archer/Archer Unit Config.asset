@@ -20,4 +20,7 @@ MonoBehaviour:
   icon: {fileID: 4723107735738678597, guid: df868cfcd61831c4c8a9a61a5220ee7b, type: 3}
   placementCost: 10
   targetingPriority: 0
-  upgradePaths: []
+  upgradePaths:
+  - {fileID: 11400000, guid: 35c0bd99f12cac941945ca27f7523679, type: 2}
+  - {fileID: 11400000, guid: 76a227c0581803e46a65c1c03dc1dd07, type: 2}
+  - {fileID: 11400000, guid: 45d937874c432964995b7ec554f5addb, type: 2}

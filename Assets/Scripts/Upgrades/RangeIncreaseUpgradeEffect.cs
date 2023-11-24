@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "UpgradeEffects/RangeIncrease")]
-public class EagleEye : UpgradeEffect
+public class RangeIncreaseUpgradeEffect : UpgradeEffect
 {
     public float rangeBonus = 2f;
 
