@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 public enum ElementType
 {
     Fire,
@@ -28,6 +30,15 @@ public interface IAttackable
     void TakeDamage(float damage); // Amount of damage passed after calculation by CombatHandler
     void Heal(float amount);
     void Defeat();
+
+    //Status Effects
+    List<IStatusEffect> ActiveEffects { get; }
+
+    void ApplyStatusEffect(IStatusEffect effect);
+    void RemoveStatusEffect(IStatusEffect effect);
+    void RemoveAllStatusEffects();
+    bool HasStatusEffect(StatusEffectType effectType);
+    void TickStatusEffects(); // To be called every frame/update to process effects over time
 
     // Additional methods for applying and managing effects
     // void ApplyStatusEffect(IStatusEffect effect);

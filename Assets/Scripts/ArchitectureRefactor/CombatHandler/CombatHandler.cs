@@ -18,6 +18,15 @@ public class CombatHandler : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        // Imagine a list or other collection containing references to all attackable entities
+        // foreach (var entity in attackableEntities)
+        // {
+        //     entity.TickStatusEffects();
+        // }
+    }
+
     // May need to be moved once IAttacker is implemented
     public enum DamageType
     {
@@ -89,5 +98,29 @@ public class CombatHandler : MonoBehaviour
         return elementalEffectiveness;
     }
 
-    // Add other methods for AOE, DOTs, and chaining as necessary
+    // Apply a status effect to a target
+    public void ApplyEffect(IAttackable target, IStatusEffect effect)
+    {
+        // Check if the effect is already applied and stackable or refreshable
+        if (target.HasStatusEffect(effect.StatusEffectType) && effect.IsRefreshable)
+        {
+            // Refresh effect logic
+        }
+        else if (target.HasStatusEffect(effect.StatusEffectType) && effect.IsStackable)
+        {
+            // stack effect logic
+        }
+        else
+        {
+            // Apply the new effect to the target
+            target.ApplyStatusEffect(effect);
+            effect.ApplyEffect(target);
+        }
+    }
+
+    public void RemoveEffect(IAttackable target, IStatusEffect effect)
+    {
+        target.RemoveStatusEffect(effect);
+        effect.RemoveEffect(target); // Ensure clean-up logic is called, if any
+    }
 }
