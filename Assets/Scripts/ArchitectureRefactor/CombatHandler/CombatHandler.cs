@@ -34,8 +34,15 @@ public class CombatHandler : MonoBehaviour
         Magical
     }
 
+    // Method to check for a critical hit
+    public bool IsCriticalHit(IAttacker attacker)
+    {
+        float randomValue = Random.Range(0.0f, 100.0f);
+        return randomValue < attacker.CriticalHitChance;
+    }
+
     // Method called when direct damage is dealt
-    public void ProcessDirectDamage(IAttackable target, float rawDamage, DamageType damageType, ElementType attackerElementType)
+    public void ProcessDirectDamage(IAttackable target, float rawDamage, DamageType damageType, IAttacker attacker)
     {
         if (target.IsInvulnerable)
         {
@@ -50,11 +57,22 @@ public class CombatHandler : MonoBehaviour
             return; // Skip further damage processing
         }
 
+        float inputDamage = rawDamage;
+
+        // Check if the attack is a critical hit
+        if (IsCriticalHit(attacker))
+        {
+            // Apply the critical hit multiplier to the damage
+            inputDamage *= attacker.CriticalHitMultiplier;
+            // Optionally, you could trigger a critical hit event or feedback here
+            // e.g., CombatEvents.Instance.CriticalHitOccurred(attacker, target, damageToDeal);
+        }
+
         // Apply percent damage reduction first, as this is the primary tanking stat
-        float effectiveDamage = rawDamage * (1f - (target.PercentDamageReduction / 100f));
+        float effectiveDamage = inputDamage * (1f - (target.PercentDamageReduction / 100f));
 
         // Apply elemental bonus or penalty based on the attacker's and target's elemental types
-        effectiveDamage *= CalculateElementalBonus(attackerElementType, target.ElementalType);
+        effectiveDamage *= CalculateElementalBonus(attacker.ElementType, target.ElementalType);
 
         // Finally reduce the damage with Armor or Magic Resistance based on the DamageType
         switch (damageType)
