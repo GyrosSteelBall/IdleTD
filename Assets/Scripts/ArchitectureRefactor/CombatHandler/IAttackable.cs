@@ -22,6 +22,7 @@ public interface IAttackable
     float PercentEvadeChance { get; } // Used by CombatHandler for damage calculation
     bool IsInvulnerable { get; }
 
+
     // Properties related to combat interaction
     int TauntLevel { get; } // Higher taunt levels might attract more enemy attention
     int VisibilityLevel { get; } // Affects the entity's ability to be detected by enemies

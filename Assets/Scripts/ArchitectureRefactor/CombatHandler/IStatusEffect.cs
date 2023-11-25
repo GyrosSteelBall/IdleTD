@@ -1,6 +1,7 @@
 public enum StatusEffectType
 {
     //Put status effect types here
+    HealingReductionEffect
 }
 
 public interface IStatusEffect

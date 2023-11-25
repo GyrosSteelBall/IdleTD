@@ -27,13 +27,6 @@ public class CombatHandler : MonoBehaviour
         // }
     }
 
-    // May need to be moved once IAttacker is implemented
-    public enum DamageType
-    {
-        Physical,
-        Magical
-    }
-
     // Method to check for a critical hit
     public bool IsCriticalHit(IAttacker attacker)
     {
@@ -42,7 +35,7 @@ public class CombatHandler : MonoBehaviour
     }
 
     // Method called when direct damage is dealt
-    public void ProcessDirectDamage(IAttackable target, float rawDamage, DamageType damageType, IAttacker attacker)
+    public void ProcessDirectDamage(IAttackable target, float rawDamage, IAttacker attacker)
     {
         if (target.IsInvulnerable)
         {
@@ -75,7 +68,7 @@ public class CombatHandler : MonoBehaviour
         effectiveDamage *= CalculateElementalBonus(attacker.ElementType, target.ElementalType);
 
         // Finally reduce the damage with Armor or Magic Resistance based on the DamageType
-        switch (damageType)
+        switch (attacker.DamageType)
         {
             case DamageType.Physical:
                 effectiveDamage = ReduceDamageByResistance(effectiveDamage, target.Armor);
@@ -141,4 +134,25 @@ public class CombatHandler : MonoBehaviour
         target.RemoveStatusEffect(effect);
         effect.RemoveEffect(target); // Ensure clean-up logic is called, if any
     }
+
+    // Method for immediate healing
+    // public void HealTarget(IAttackable target, float healAmount, bool isAbilityHealing = false)
+    // {
+    //     if (target.Health <= 0) // No healing for defeated units
+    //         return;
+
+    //     float effectiveHealAmount = healAmount;
+
+    //     // If the unit is affected by a healing reduction effect, reduce the heal amount
+    //     if (target.HasStatusEffect(StatusEffectType.HealingReductionEffect)) // Example check
+    //     {
+    //         effectiveHealAmount *= (1f - target.HealingReduction); // HealingReduction is hypothetical value by which healing is reduced (0 to 1)
+    //     }
+
+    //     // Apply the healing to the target's health, respecting their max health limits
+    //     target.Heal(effectiveHealAmount);
+
+    //     // Optionally, broadcast a heal event for UI update or other game logic to respond
+    //     // CombatEvents.Instance.OnHealed(target, effectiveHealAmount, isAbilityHealing);
+    // }
 }
