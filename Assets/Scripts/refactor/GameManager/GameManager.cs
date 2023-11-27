@@ -9,6 +9,8 @@ public class GameManager : Singleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
+        WaveManager.Instance.OnWaveStarted += HandleWaveStarting;
+        WaveManager.Instance.OnWaveCompleted += HandleWaveCompletion;
         ChangeState(new PreparationState());
     }
 
@@ -25,10 +27,24 @@ public class GameManager : Singleton<GameManager>
         _currentState?.Update();
     }
 
+    private void HandleWaveStarting(int waveNumber)
+    {
+        ChangeState(new WaveInProgressState());
+    }
+
+    private void HandleWaveCompletion()
+    {
+        // Change the state to WaveCompleted for any inter-wave logic or wait
+        ChangeState(new WaveCompletedState());
+        // Possibly start a countdown for the next wave, prepare for the next state, or simply go to the next wave immediately
+    }
+
     protected override void OnDestroy()
     {
         // This will handle the singleton destruction.
         base.OnDestroy();
+        WaveManager.Instance.OnWaveCompleted -= HandleWaveCompletion;
+        WaveManager.Instance.OnWaveStarted -= HandleWaveStarting;
         OnGameStateChanged = null; // Unsubscribe all listeners to prevent memory leaks
     }
 }
