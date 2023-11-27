@@ -1,27 +1,57 @@
 public class ResourceManager : Singleton<ResourceManager>
 {
-    // Resource manager specific code...
+    private int _gold;
 
-    protected override void Awake()
+    public int Gold
     {
-        base.Awake();
-        GameEventManager.Instance.OnGameEvent += HandleGameEvent;
-    }
-
-    private void HandleGameEvent(GameEvent gameEvent)
-    {
-        if (gameEvent is EnemyDeathEvent enemyDeathEvent)
+        get => _gold;
+        private set
         {
-            // Increase resources when an enemy dies
-            // ...
+            if (_gold != value)
+            {
+                _gold = value;
+                OnGoldChanged?.Invoke(_gold);
+            }
         }
     }
 
-    private void OnDestroy()
+    // Event to notify when the gold resources change
+    public event Action<int> OnGoldChanged;
+
+    public void AddGold(int amount)
     {
-        if (GameEventManager.Instance != null)
+        if (amount < 0)
         {
-            GameEventManager.Instance.OnGameEvent -= HandleGameEvent;
+            Debug.LogWarning("Attempt to add negative gold amount.");
+            return; // Optionally handle invalid amounts
         }
+        Gold += amount;
+    }
+
+    public bool SpendGold(int amount)
+    {
+        if (amount <= 0)
+        {
+            Debug.LogWarning("Attempt to spend negative or zero gold amount.");
+            return false; // Optionally handle invalid amounts
+        }
+
+        if (_gold >= amount)
+        {
+            Gold -= amount;
+            return true;
+        }
+        else
+        {
+            Debug.LogWarning("Not enough gold to spend.");
+            return false;
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        // This will handle the singleton destruction.
+        base.OnDestroy();
+        OnGoldChanged = null; // Unsubscribe all listeners to prevent memory leaks
     }
 }

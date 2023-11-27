@@ -22,4 +22,11 @@ public class GameManager : Singleton<GameManager>
     {
         _currentState?.Update();
     }
+
+    protected override void OnDestroy()
+    {
+        // This will handle the singleton destruction.
+        base.OnDestroy();
+        OnGameStateChanged = null; // Unsubscribe all listeners to prevent memory leaks
+    }
 }
