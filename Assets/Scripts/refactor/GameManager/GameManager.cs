@@ -1,3 +1,5 @@
+using System;
+
 public class GameManager : Singleton<GameManager>
 {
     private IGameState _currentState;

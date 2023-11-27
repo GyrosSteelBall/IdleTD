@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance;
@@ -35,5 +37,10 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         {
             Destroy(gameObject);  // Ensure there's only one instance in the scene.
         }
+    }
+
+    protected virtual void OnDestroy()
+    {
+        // base.OnDestroy();
     }
 }
