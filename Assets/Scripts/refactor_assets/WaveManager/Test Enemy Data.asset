@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ddc2c73560ce142bf757b20ff623a0, type: 3}
   m_Name: Test Enemy Data
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 0}
-  enemyName: 
-  health: 0
-  attackPower: 0
-  movementSpeed: 0
+  enemyPrefab: {fileID: 7662546760087537391, guid: 67cf28029e4ba1749a80e020fcfb3f13,
+    type: 3}
+  enemyName: Orc
+  health: 100
+  attackPower: 10
+  movementSpeed: 1

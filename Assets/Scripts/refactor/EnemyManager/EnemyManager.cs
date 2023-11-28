@@ -19,7 +19,7 @@ public class EnemyManager : Singleton<EnemyManager>
     private void HandleSpawnEnemyRequest(EnemyData enemyData, Vector3 spawnPoint)
     {
         Debug.Log("HandleSpawnEnemyRequest()");
-        // SpawnEnemy(enemyData, spawnPoint);
+        SpawnEnemy(enemyData, spawnPoint);
     }
 
     // Public method to spawn an enemy
@@ -33,11 +33,11 @@ public class EnemyManager : Singleton<EnemyManager>
         }
 
         var newEnemyGameObject = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
-        var newEnemyController = newEnemyGameObject.GetComponent<EnemyController>();
+        // var newEnemyController = newEnemyGameObject.GetComponent<EnemyController>();
         // Initialize the enemy with any additional parameters if necessary
         // Register this enemy
-        activeEnemies.Add(newEnemyController);
-        newEnemyController.OnDeath += () => UnregisterEnemy(newEnemyController);
+        // activeEnemies.Add(newEnemyController);
+        // newEnemyController.OnDeath += () => UnregisterEnemy(newEnemyController);
     }
 
     // Unregister the enemy
