@@ -18,7 +18,8 @@ public class EnemyManager : Singleton<EnemyManager>
 
     private void HandleSpawnEnemyRequest(EnemyData enemyData, Vector3 spawnPoint)
     {
-        SpawnEnemy(enemyData, spawnPoint);
+        Debug.Log("HandleSpawnEnemyRequest()");
+        // SpawnEnemy(enemyData, spawnPoint);
     }
 
     // Public method to spawn an enemy

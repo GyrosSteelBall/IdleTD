@@ -22,19 +22,18 @@ public class WaveManager : Singleton<WaveManager>
     public void StartNextWave()
     {
         Debug.Log("Starting Wave in WaveManager");
-        OnWaveStarted?.Invoke(currentWaveIndex);
-        // currentWaveIndex++;
-        // if (currentWaveIndex < waves.Count)
-        // {
-        //     var wave = waves[currentWaveIndex];
-        //     OnWaveStarted?.Invoke(currentWaveIndex);
-        //     StartCoroutine(SpawnWave(wave));
-        // }
-        // else
-        // {
-        //     // Handle end of all waves
-        //     GameManager.Instance.ChangeState(new VictoryState());
-        // }
+        currentWaveIndex++;
+        if (currentWaveIndex < waves.Count)
+        {
+            var wave = waves[currentWaveIndex];
+            OnWaveStarted?.Invoke(currentWaveIndex);
+            StartCoroutine(SpawnWave(wave));
+        }
+        else
+        {
+            // Handle end of all waves
+            GameManager.Instance.ChangeState(new VictoryState());
+        }
     }
 
     private IEnumerator SpawnWave(Wave wave)

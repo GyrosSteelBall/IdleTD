@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Enemy", menuName = "Enemy Data", order = 51)]
+[CreateAssetMenu(fileName = "New Enemy", menuName = "EnemyManager/Enemy Data", order = 51)]
 public class EnemyData : ScriptableObject
 {
     [SerializeField]
