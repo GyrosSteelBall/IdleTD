@@ -1,8 +1,11 @@
+using UnityEngine;
+
 public class WaveInProgressState : IGameState
 {
     public void OnStateEnter()
     {
         // Preparations for the state, e.g., enabling the UI for unit placement
+        Debug.Log("WaveInProgress State OnStateEnter()");
     }
 
     public void OnStateExit()

@@ -13,22 +13,28 @@ public class WaveManager : Singleton<WaveManager>
     public event Action OnWaveCompleted;
     public event Action<EnemyData, Vector3> OnSpawnEnemyRequest;
 
-    // ... Wave configuration and methods ...
+    protected override void Awake()
+    {
+        base.Awake();
+        UIManager.Instance.OnStartWaveButtonClicked += StartNextWave;
+    }
 
     public void StartNextWave()
     {
-        currentWaveIndex++;
-        if (currentWaveIndex < waves.Count)
-        {
-            var wave = waves[currentWaveIndex];
-            OnWaveStarted?.Invoke(currentWaveIndex);
-            StartCoroutine(SpawnWave(wave));
-        }
-        else
-        {
-            // Handle end of all waves
-            GameManager.Instance.ChangeState(new VictoryState());
-        }
+        Debug.Log("Starting Wave in WaveManager");
+        OnWaveStarted?.Invoke(currentWaveIndex);
+        // currentWaveIndex++;
+        // if (currentWaveIndex < waves.Count)
+        // {
+        //     var wave = waves[currentWaveIndex];
+        //     OnWaveStarted?.Invoke(currentWaveIndex);
+        //     StartCoroutine(SpawnWave(wave));
+        // }
+        // else
+        // {
+        //     // Handle end of all waves
+        //     GameManager.Instance.ChangeState(new VictoryState());
+        // }
     }
 
     private IEnumerator SpawnWave(Wave wave)
@@ -58,6 +64,12 @@ public class WaveManager : Singleton<WaveManager>
         // Unsubscribe to the event to avoid getting called multiple times
         EnemyManager.Instance.OnAllEnemiesDefeated -= OnAllEnemiesCleared;
         OnWaveCompleted?.Invoke();
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        UIManager.Instance.OnStartWaveButtonClicked -= StartNextWave;
     }
 
     // ... Other WaveManager functionality ...
