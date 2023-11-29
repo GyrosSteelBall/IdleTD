@@ -24,6 +24,21 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
+    void OnEnable()
+    {
+        EventBus.Instance.Subscribe<WaveManagerWaveStartedEvent>(HandleWaveStarted);
+    }
+
+    void OnDisable()
+    {
+        EventBus.Instance.Unsubscribe<WaveManagerWaveStartedEvent>(HandleWaveStarted);
+    }
+
+    private void HandleWaveStarted(WaveManagerWaveStartedEvent inputEvent)
+    {
+        startWaveButton.interactable = false;
+    }
+
     private void StartWaveButtonClicked()
     {
         Debug.Log("Start Wave button clicked!");

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour, IEnemyController
@@ -6,6 +7,14 @@ public class EnemyController : MonoBehaviour, IEnemyController
     private EnemyData enemyData;
     public event Action OnDeath;
     public event Action OnDeathEnemyController;
+    private List<Vector3> currentPath;
+    private int currentWaypointIndex = 0;
+    private float movementSpeed = 5.0f;
+
+    public void SetPath(List<Vector3> path)
+    {
+        currentPath = path;
+    }
 
     public void Initialize(EnemyData data)
     {
@@ -15,7 +24,20 @@ public class EnemyController : MonoBehaviour, IEnemyController
 
     void Update()
     {
-        // Handle behavior such as moving along a path and attacking targets
+        if (currentPath != null && currentWaypointIndex < currentPath.Count)
+        {
+            Vector3 targetPosition = currentPath[currentWaypointIndex];
+            MoveTowards(targetPosition);
+            if (Vector3.Distance(transform.position, targetPosition) < 0.1f) // Threshold to consider as reached
+            {
+                currentWaypointIndex++;
+            }
+        }
+    }
+
+    private void MoveTowards(Vector3 target)
+    {
+        transform.position = Vector3.MoveTowards(transform.position, target, movementSpeed * Time.deltaTime);
     }
 
     public void TakeDamage(float damage)

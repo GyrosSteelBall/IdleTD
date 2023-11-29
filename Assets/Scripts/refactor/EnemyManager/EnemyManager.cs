@@ -8,7 +8,8 @@ public class EnemyManager : Singleton<EnemyManager>
     // Event to notify when all current enemies have been defeated
     public event Action OnAllEnemiesDefeated;
     // A list or set to keep track of all active enemies
-    private HashSet<IEnemy> activeEnemies = new HashSet<IEnemy>();
+    private HashSet<IEnemyController> activeEnemies = new HashSet<IEnemyController>();
+    [SerializeField] private PathManager pathManager;
 
     protected override void Awake()
     {
@@ -42,10 +43,25 @@ public class EnemyManager : Singleton<EnemyManager>
         }
 
         var newEnemyGameObject = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
-        var newEnemy = newEnemyGameObject.GetComponent<IEnemy>();
-        newEnemy?.Initialize(enemyData, spawnPosition);
-        activeEnemies.Add(newEnemy);
+        var newEnemy = newEnemyGameObject.GetComponent<EnemyController>();
+        if (newEnemy != null)
+        {
+            var pathIndex = 0; //Maybe update this later to be configurable
+            newEnemy.Initialize(enemyData);
+            AssignPathToEnemy(newEnemy, pathIndex);
+            activeEnemies.Add(newEnemy);
+        }
+        else
+        {
+            Debug.LogError("EnemyController component not found on the spawned enemy prefab.");
+        }
         // Consider adding a null check or a fallback mechanism
+    }
+
+    private void AssignPathToEnemy(EnemyController enemy, int pathIndex)
+    {
+        var path = pathManager.GetPath(pathIndex);
+        enemy.SetPath(path);
     }
 
     // Unregister the enemy
