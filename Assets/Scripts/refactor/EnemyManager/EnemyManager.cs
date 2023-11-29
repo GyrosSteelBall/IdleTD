@@ -8,7 +8,7 @@ public class EnemyManager : Singleton<EnemyManager>
     // Event to notify when all current enemies have been defeated
     public event Action OnAllEnemiesDefeated;
     // A list or set to keep track of all active enemies
-    private HashSet<EnemyController> activeEnemies = new HashSet<EnemyController>();
+    private HashSet<IEnemy> activeEnemies = new HashSet<IEnemy>();
 
     protected override void Awake()
     {
@@ -22,7 +22,6 @@ public class EnemyManager : Singleton<EnemyManager>
         SpawnEnemy(enemyData, spawnPoint);
     }
 
-    // Public method to spawn an enemy
     public void SpawnEnemy(EnemyData enemyData, Vector3 spawnPosition)
     {
         var enemyPrefab = enemyData.EnemyPrefab;
@@ -33,17 +32,16 @@ public class EnemyManager : Singleton<EnemyManager>
         }
 
         var newEnemyGameObject = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
-        // var newEnemyController = newEnemyGameObject.GetComponent<EnemyController>();
-        // Initialize the enemy with any additional parameters if necessary
-        // Register this enemy
-        // activeEnemies.Add(newEnemyController);
-        // newEnemyController.OnDeath += () => UnregisterEnemy(newEnemyController);
+        var newEnemy = newEnemyGameObject.GetComponent<IEnemy>();
+        newEnemy?.Initialize(enemyData, spawnPosition);
+        activeEnemies.Add(newEnemy);
+        // Consider adding a null check or a fallback mechanism
     }
 
     // Unregister the enemy
-    private void UnregisterEnemy(EnemyController enemy)
+    private void UnregisterEnemy(IEnemy enemy)
     {
-        enemy.OnDeath -= () => UnregisterEnemy(enemy);
+        enemy.OnDeathEnemy -= () => UnregisterEnemy(enemy);
         activeEnemies.Remove(enemy);
 
         if (activeEnemies.Count == 0)
