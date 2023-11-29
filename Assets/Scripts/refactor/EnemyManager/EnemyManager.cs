@@ -16,6 +16,16 @@ public class EnemyManager : Singleton<EnemyManager>
         WaveManager.Instance.OnSpawnEnemyRequest += HandleSpawnEnemyRequest;
     }
 
+    void OnEnable()
+    {
+        EventBus.Instance.Subscribe<EnemyControllerEnemyDeathEvent>(UnregisterEnemy);
+    }
+
+    void OnDisable()
+    {
+        EventBus.Instance.Unsubscribe<EnemyControllerEnemyDeathEvent>(UnregisterEnemy);
+    }
+
     private void HandleSpawnEnemyRequest(EnemyData enemyData, Vector3 spawnPoint)
     {
         Debug.Log("HandleSpawnEnemyRequest()");
@@ -39,15 +49,15 @@ public class EnemyManager : Singleton<EnemyManager>
     }
 
     // Unregister the enemy
-    private void UnregisterEnemy(IEnemy enemy)
+    private void UnregisterEnemy(EnemyControllerEnemyDeathEvent inputEvent)
     {
-        enemy.OnDeathEnemy -= () => UnregisterEnemy(enemy);
-        activeEnemies.Remove(enemy);
+        // enemy.OnDeathEnemy -= () => UnregisterEnemy(enemy);
+        // activeEnemies.Remove(enemy);
 
         if (activeEnemies.Count == 0)
         {
-            // No more active enemies; notify GameManager or WaveManager
-            OnAllEnemiesDefeated?.Invoke();
+            // No more active enemies; notify EventBus
+            EventBus.Instance.Publish(new EnemyManagerAllEnemiesDefeatedEvent());
         }
     }
 

@@ -25,7 +25,7 @@ public class EnemyController : MonoBehaviour, IEnemyController
 
     public void Die()
     {
-        OnDeathEnemyController?.Invoke();
+        EventBus.Instance.Publish(new EnemyControllerEnemyDeathEvent(this));
     }
 
     public void Move(Vector3 direction)

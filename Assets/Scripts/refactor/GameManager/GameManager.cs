@@ -9,9 +9,19 @@ public class GameManager : Singleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
-        WaveManager.Instance.OnWaveStarted += HandleWaveStarting;
-        WaveManager.Instance.OnWaveCompleted += HandleWaveCompletion;
         ChangeState(new PreparationState());
+    }
+
+    void OnEnable()
+    {
+        EventBus.Instance.Subscribe<WaveManagerWaveStartedEvent>(HandleWaveStarting);
+        EventBus.Instance.Subscribe<WaveManagerWaveCompletedEvent>(HandleWaveCompletion);
+    }
+
+    void OnDisable()
+    {
+        EventBus.Instance.Unsubscribe<WaveManagerWaveStartedEvent>(HandleWaveStarting);
+        EventBus.Instance.Unsubscribe<WaveManagerWaveCompletedEvent>(HandleWaveCompletion);
     }
 
     public void ChangeState(IGameState newState)
@@ -27,12 +37,12 @@ public class GameManager : Singleton<GameManager>
         _currentState?.Update();
     }
 
-    private void HandleWaveStarting(int waveNumber)
+    private void HandleWaveStarting(WaveManagerWaveStartedEvent inputEvent)
     {
         ChangeState(new WaveInProgressState());
     }
 
-    private void HandleWaveCompletion()
+    private void HandleWaveCompletion(WaveManagerWaveCompletedEvent inputEvent)
     {
         // Change the state to WaveCompleted for any inter-wave logic or wait
         ChangeState(new WaveCompletedState());
@@ -43,8 +53,5 @@ public class GameManager : Singleton<GameManager>
     {
         // This will handle the singleton destruction.
         base.OnDestroy();
-        WaveManager.Instance.OnWaveCompleted -= HandleWaveCompletion;
-        WaveManager.Instance.OnWaveStarted -= HandleWaveStarting;
-        OnGameStateChanged = null; // Unsubscribe all listeners to prevent memory leaks
     }
 }

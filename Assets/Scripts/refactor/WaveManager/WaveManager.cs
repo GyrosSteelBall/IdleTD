@@ -8,8 +8,6 @@ public class WaveManager : Singleton<WaveManager>
     [SerializeField] private List<Wave> waves;
     [SerializeField] private Vector3 spawnPoint;
     private int currentWaveIndex = -1;
-    // Define an event for signaling the beginning and completion of a wave
-    public event Action<int> OnWaveStarted;
     public event Action OnWaveCompleted;
     public event Action<EnemyData, Vector3> OnSpawnEnemyRequest;
 
@@ -19,6 +17,16 @@ public class WaveManager : Singleton<WaveManager>
         UIManager.Instance.OnStartWaveButtonClicked += StartNextWave;
     }
 
+    void OnEnable()
+    {
+        EventBus.Instance.Subscribe<EnemyManagerAllEnemiesDefeatedEvent>(OnAllEnemiesCleared);
+    }
+
+    void OnDisable()
+    {
+        EventBus.Instance.Unsubscribe<EnemyManagerAllEnemiesDefeatedEvent>(OnAllEnemiesCleared);
+    }
+
     public void StartNextWave()
     {
         Debug.Log("Starting Wave in WaveManager");
@@ -26,7 +34,7 @@ public class WaveManager : Singleton<WaveManager>
         if (currentWaveIndex < waves.Count)
         {
             var wave = waves[currentWaveIndex];
-            OnWaveStarted?.Invoke(currentWaveIndex);
+            EventBus.Instance.Publish(new WaveManagerWaveStartedEvent(currentWaveIndex));
             StartCoroutine(SpawnWave(wave));
         }
         else
@@ -48,8 +56,6 @@ public class WaveManager : Singleton<WaveManager>
                 yield return new WaitForSeconds(wave.spawnInterval);
             }
         }
-        // After spawning all enemies, subscribe to the OnAllEnemiesDefeated event of the EnemyManager to know when to complete the wave
-        EnemyManager.Instance.OnAllEnemiesDefeated += OnAllEnemiesCleared;
     }
 
     private Vector3 GetSpawnPosition()
@@ -58,11 +64,9 @@ public class WaveManager : Singleton<WaveManager>
         return spawnPoint;
     }
 
-    private void OnAllEnemiesCleared()
+    private void OnAllEnemiesCleared(EnemyManagerAllEnemiesDefeatedEvent inputEvent)
     {
-        // Unsubscribe to the event to avoid getting called multiple times
-        EnemyManager.Instance.OnAllEnemiesDefeated -= OnAllEnemiesCleared;
-        OnWaveCompleted?.Invoke();
+        EventBus.Instance.Publish(new WaveManagerWaveCompletedEvent());
     }
 
     protected override void OnDestroy()
