@@ -20,6 +20,9 @@ public class LivesManager : Singleton<LivesManager>
     {
         lives--;
         EventBus.Instance.Publish(new LivesManagerLivesUpdatedEvent(lives));
-        // Check if lives are 0 and end the game if necessary
+        if (lives <= 0)
+        {
+            EventBus.Instance.Publish(new LivesManagerLivesDepletedEvent());
+        }
     }
 }

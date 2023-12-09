@@ -14,14 +14,21 @@ public class GameManager : Singleton<GameManager>
 
     void OnEnable()
     {
+        EventBus.Instance.Subscribe<LivesManagerLivesDepletedEvent>(HandleLivesDepleted);
         EventBus.Instance.Subscribe<WaveManagerWaveStartedEvent>(HandleWaveStarting);
         EventBus.Instance.Subscribe<WaveManagerWaveCompletedEvent>(HandleWaveCompletion);
     }
 
     void OnDisable()
     {
+        EventBus.Instance.Subscribe<LivesManagerLivesDepletedEvent>(HandleLivesDepleted);
         EventBus.Instance.Unsubscribe<WaveManagerWaveStartedEvent>(HandleWaveStarting);
         EventBus.Instance.Unsubscribe<WaveManagerWaveCompletedEvent>(HandleWaveCompletion);
+    }
+
+    private void HandleLivesDepleted(LivesManagerLivesDepletedEvent inputEvent)
+    {
+        ChangeState(new LossGameState());
     }
 
     public void ChangeState(IGameState newState)

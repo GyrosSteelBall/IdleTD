@@ -11,6 +11,8 @@ public class UIManager : Singleton<UIManager>
     private TextMeshProUGUI livesText; // Serialized field for the Lives text
     [SerializeField]
     private TextMeshProUGUI waveNumberText; // Serialized field for the Wave Number text
+    [SerializeField]
+    private TextMeshProUGUI lossText; // Serialized field for the Loss text
 
     protected override void Awake()
     {
@@ -24,10 +26,28 @@ public class UIManager : Singleton<UIManager>
             Debug.Log("here");
             startWaveButton.onClick.AddListener(StartWaveButtonClicked);
         }
+
+        if (livesText == null)
+        {
+            Debug.LogError("Lives text is not assigned in the Inspector!");
+        }
+
+        if (waveNumberText == null)
+        {
+            Debug.LogError("Wave Number text is not assigned in the Inspector!");
+        }
+
+        if (lossText == null)
+        {
+            Debug.LogError("Loss text is not assigned in the Inspector!");
+        }
+
+        lossText.gameObject.SetActive(false);
     }
 
     void OnEnable()
     {
+        EventBus.Instance.Subscribe<LivesManagerLivesDepletedEvent>(HandleLivesDepleted);
         EventBus.Instance.Subscribe<LivesManagerLivesUpdatedEvent>(OnLivesUpdated);
         EventBus.Instance.Subscribe<WaveManagerWaveStartedEvent>(HandleWaveStarted);
         EventBus.Instance.Subscribe<WaveManagerWaveCompletedEvent>(HandleWaveCompleted);
@@ -35,9 +55,16 @@ public class UIManager : Singleton<UIManager>
 
     void OnDisable()
     {
+        EventBus.Instance.Subscribe<LivesManagerLivesDepletedEvent>(HandleLivesDepleted);
         EventBus.Instance.Unsubscribe<LivesManagerLivesUpdatedEvent>(OnLivesUpdated);
         EventBus.Instance.Unsubscribe<WaveManagerWaveStartedEvent>(HandleWaveStarted);
         EventBus.Instance.Unsubscribe<WaveManagerWaveCompletedEvent>(HandleWaveCompleted);
+    }
+
+    private void HandleLivesDepleted(LivesManagerLivesDepletedEvent inputEvent)
+    {
+        startWaveButton.interactable = false;
+        lossText.gameObject.SetActive(true);
     }
 
     private void OnLivesUpdated(LivesManagerLivesUpdatedEvent inputEvent)
