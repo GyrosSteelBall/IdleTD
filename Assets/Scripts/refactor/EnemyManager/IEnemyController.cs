@@ -3,7 +3,7 @@ using UnityEngine;
 
 public interface IEnemyController
 {
-    void Move(Vector3 direction);
+    public void MoveTowardsNextWaypoint();
     public event Action OnDeathEnemyController;
     // void Attack();
     // other methods...

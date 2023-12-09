@@ -10,6 +10,19 @@ public class EnemyController : MonoBehaviour, IEnemyController
     private List<Vector3> currentPath;
     private int currentWaypointIndex = 0;
     private float movementSpeed = 5.0f;
+    private IEnemyState _currentState;
+
+    void Awake()
+    {
+        ChangeState(new EnemyMovingState());
+    }
+
+    public void ChangeState(IEnemyState newState)
+    {
+        _currentState?.OnStateExit(this);
+        _currentState = newState;
+        _currentState.OnStateEnter(this);
+    }
 
     public void SetPath(List<Vector3> path)
     {
@@ -24,15 +37,7 @@ public class EnemyController : MonoBehaviour, IEnemyController
 
     void Update()
     {
-        if (currentPath != null && currentWaypointIndex < currentPath.Count)
-        {
-            Vector3 targetPosition = currentPath[currentWaypointIndex];
-            MoveTowards(targetPosition);
-            if (Vector3.Distance(transform.position, targetPosition) < 0.1f) // Threshold to consider as reached
-            {
-                currentWaypointIndex++;
-            }
-        }
+        _currentState?.Update(this);
     }
 
     private void MoveTowards(Vector3 target)
@@ -50,9 +55,26 @@ public class EnemyController : MonoBehaviour, IEnemyController
         EventBus.Instance.Publish(new EnemyControllerEnemyDeathEvent(this));
     }
 
-    public void Move(Vector3 direction)
+    public void MoveTowardsNextWaypoint()
     {
-        throw new NotImplementedException();
+        if (currentPath == null || currentPath.Count == 0)
+        {
+            Debug.Log("No path assigned.");
+            return;
+        }
+
+        if (currentWaypointIndex >= currentPath.Count)
+        {
+            Debug.Log("Reached the end of the path.");
+            return;
+        }
+
+        MoveTowards(currentPath[currentWaypointIndex]);
+
+        if (Vector3.Distance(transform.position, currentPath[currentWaypointIndex]) < 0.1f)
+        {
+            currentWaypointIndex++;
+        }
     }
 
     // Other methods like moving, attacking, etc.
