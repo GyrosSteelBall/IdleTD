@@ -9,9 +9,8 @@ public class UIManager : Singleton<UIManager>
     private Button startWaveButton; // Serialized field for the Start Wave button
     [SerializeField]
     private TextMeshProUGUI livesText; // Serialized field for the Lives text
-
-    // Define an event that others can subscribe to
-    public event Action OnStartWaveButtonClicked;
+    [SerializeField]
+    private TextMeshProUGUI waveNumberText; // Serialized field for the Wave Number text
 
     protected override void Awake()
     {
@@ -31,12 +30,14 @@ public class UIManager : Singleton<UIManager>
     {
         EventBus.Instance.Subscribe<LivesManagerLivesUpdatedEvent>(OnLivesUpdated);
         EventBus.Instance.Subscribe<WaveManagerWaveStartedEvent>(HandleWaveStarted);
+        EventBus.Instance.Subscribe<WaveManagerWaveCompletedEvent>(HandleWaveCompleted);
     }
 
     void OnDisable()
     {
         EventBus.Instance.Unsubscribe<LivesManagerLivesUpdatedEvent>(OnLivesUpdated);
         EventBus.Instance.Unsubscribe<WaveManagerWaveStartedEvent>(HandleWaveStarted);
+        EventBus.Instance.Unsubscribe<WaveManagerWaveCompletedEvent>(HandleWaveCompleted);
     }
 
     private void OnLivesUpdated(LivesManagerLivesUpdatedEvent inputEvent)
@@ -46,16 +47,21 @@ public class UIManager : Singleton<UIManager>
 
     private void HandleWaveStarted(WaveManagerWaveStartedEvent inputEvent)
     {
+        Debug.Log("Wave started!" + inputEvent.WaveNumber);
         startWaveButton.interactable = false;
+        waveNumberText.text = $"Wave: {inputEvent.WaveNumber + 1}"; // Update the wave number text
     }
 
     private void StartWaveButtonClicked()
     {
         Debug.Log("Start Wave button clicked!");
-
-        // Raise the event
-        OnStartWaveButtonClicked?.Invoke();
+        EventBus.Instance.Publish(new UIManagerStartWaveButtonClickedEvent());
     }
 
+
+    private void HandleWaveCompleted(WaveManagerWaveCompletedEvent inputEvent)
+    {
+        startWaveButton.interactable = true;
+    }
     // Rest of your UIManager code...
 }

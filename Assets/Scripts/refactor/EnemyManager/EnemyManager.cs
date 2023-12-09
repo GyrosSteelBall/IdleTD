@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class EnemyManager : Singleton<EnemyManager>
 {
-    // Event to notify when all current enemies have been defeated
-    public event Action OnAllEnemiesDefeated;
     // A list or set to keep track of all active enemies
     private HashSet<IEnemyController> activeEnemies = new HashSet<IEnemyController>();
     [SerializeField] private PathManager pathManager;

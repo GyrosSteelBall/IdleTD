@@ -8,23 +8,28 @@ public class WaveManager : Singleton<WaveManager>
     [SerializeField] private List<Wave> waves;
     [SerializeField] private Vector3 spawnPoint;
     private int currentWaveIndex = -1;
-    public event Action OnWaveCompleted;
     public event Action<EnemyData, Vector3> OnSpawnEnemyRequest;
 
     protected override void Awake()
     {
         base.Awake();
-        UIManager.Instance.OnStartWaveButtonClicked += StartNextWave;
     }
 
     void OnEnable()
     {
+        EventBus.Instance.Subscribe<UIManagerStartWaveButtonClickedEvent>(HandleStartWaveButtonClicked);
         EventBus.Instance.Subscribe<EnemyManagerAllEnemiesDefeatedEvent>(OnAllEnemiesCleared);
     }
 
     void OnDisable()
     {
+        EventBus.Instance.Unsubscribe<UIManagerStartWaveButtonClickedEvent>(HandleStartWaveButtonClicked);
         EventBus.Instance.Unsubscribe<EnemyManagerAllEnemiesDefeatedEvent>(OnAllEnemiesCleared);
+    }
+
+    private void HandleStartWaveButtonClicked(UIManagerStartWaveButtonClickedEvent inputEvent)
+    {
+        StartNextWave();
     }
 
     public void StartNextWave()
@@ -72,7 +77,6 @@ public class WaveManager : Singleton<WaveManager>
     protected override void OnDestroy()
     {
         base.OnDestroy();
-        UIManager.Instance.OnStartWaveButtonClicked -= StartNextWave;
     }
 
     // ... Other WaveManager functionality ...
