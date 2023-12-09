@@ -65,7 +65,8 @@ public class EnemyController : MonoBehaviour, IEnemyController
 
         if (currentWaypointIndex >= currentPath.Count)
         {
-            Debug.Log("Reached the end of the path.");
+            EventBus.Instance.Publish(new EnemyControllerReachedFinalWaypointEvent(this));
+            Destroy(gameObject);
             return;
         }
 

@@ -19,17 +19,18 @@ public class EnemyManager : Singleton<EnemyManager>
 
     void OnEnable()
     {
-        EventBus.Instance.Subscribe<EnemyControllerEnemyDeathEvent>(UnregisterEnemy);
+        EventBus.Instance.Subscribe<EnemyControllerReachedFinalWaypointEvent>(HandleEnemyReachedFinalWaypoint);
+        EventBus.Instance.Subscribe<EnemyControllerEnemyDeathEvent>(HandleEnemyDeath);
     }
 
     void OnDisable()
     {
-        EventBus.Instance.Unsubscribe<EnemyControllerEnemyDeathEvent>(UnregisterEnemy);
+        EventBus.Instance.Unsubscribe<EnemyControllerReachedFinalWaypointEvent>(HandleEnemyReachedFinalWaypoint);
+        EventBus.Instance.Unsubscribe<EnemyControllerEnemyDeathEvent>(HandleEnemyDeath);
     }
 
     private void HandleSpawnEnemyRequest(EnemyData enemyData, Vector3 spawnPoint)
     {
-        Debug.Log("HandleSpawnEnemyRequest()");
         SpawnEnemy(enemyData, spawnPoint);
     }
 
@@ -64,11 +65,19 @@ public class EnemyManager : Singleton<EnemyManager>
         enemy.SetPath(path);
     }
 
-    // Unregister the enemy
-    private void UnregisterEnemy(EnemyControllerEnemyDeathEvent inputEvent)
+    private void HandleEnemyReachedFinalWaypoint(EnemyControllerReachedFinalWaypointEvent inputEvent)
     {
-        // enemy.OnDeathEnemy -= () => UnregisterEnemy(enemy);
-        // activeEnemies.Remove(enemy);
+        UnregisterEnemy(inputEvent.EnemyController);
+    }
+
+    private void HandleEnemyDeath(EnemyControllerEnemyDeathEvent inputEvent)
+    {
+        UnregisterEnemy(inputEvent.EnemyController);
+    }
+
+    private void UnregisterEnemy(EnemyController enemy)
+    {
+        activeEnemies.Remove(enemy);
 
         if (activeEnemies.Count == 0)
         {
