@@ -8,7 +8,6 @@ public class WaveManager : Singleton<WaveManager>
     [SerializeField] private List<Wave> waves;
     [SerializeField] private Vector3 spawnPoint;
     private int currentWaveIndex = -1;
-    public event Action<EnemyData, Vector3> OnSpawnEnemyRequest;
 
     protected override void Awake()
     {
@@ -55,8 +54,7 @@ public class WaveManager : Singleton<WaveManager>
         {
             for (int i = 0; i < spawnInfo.count; i++)
             {
-                // Tell the EnemyManager to spawn each enemy at the appropriate location
-                OnSpawnEnemyRequest?.Invoke(spawnInfo.enemyData, GetSpawnPosition());
+                EventBus.Instance.Publish(new WaveManagerSpawnEnemyRequestEvent(spawnInfo.enemyData, GetSpawnPosition()));
 
                 yield return new WaitForSeconds(wave.spawnInterval);
             }

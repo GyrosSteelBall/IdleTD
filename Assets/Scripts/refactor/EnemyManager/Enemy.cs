@@ -1,25 +1,11 @@
-using System;
-using UnityEngine;
-
-public class Enemy : MonoBehaviour, IEnemy
+public class Enemy
 {
-    private EnemyController controller;
+    public EnemyController Controller { get; private set; }
 
-    public event Action OnDeathEnemy;
+    // Add other components as needed
 
-    // private EnemyAnimator animator;
-    // private EnemyVisuals visuals;
-
-    public void Initialize(EnemyData enemyData, Vector3 spawnPosition)
+    public Enemy(EnemyController controller)
     {
-        // Initialize the enemy with the provided data and position
+        Controller = controller;
     }
-
-    public void Die()
-    {
-        // Handle death logic, such as playing animations, dropping loot, etc.
-        OnDeathEnemy?.Invoke();
-    }
-
-    // Implement other IEnemy methods and any additional functionality
 }

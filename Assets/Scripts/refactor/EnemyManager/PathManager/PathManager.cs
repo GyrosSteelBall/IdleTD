@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathManager : MonoBehaviour
+public class PathManager : Singleton<PathManager>
 {
+
     [SerializeField]
     private List<Path> paths = new List<Path>();
 

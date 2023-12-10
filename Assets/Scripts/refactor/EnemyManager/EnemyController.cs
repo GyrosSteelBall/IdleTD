@@ -5,8 +5,6 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour, IEnemyController
 {
     private EnemyData enemyData;
-    public event Action OnDeath;
-    public event Action OnDeathEnemyController;
     private List<Vector3> currentPath;
     private int currentWaypointIndex = 0;
     private float movementSpeed = 5.0f;
@@ -19,6 +17,7 @@ public class EnemyController : MonoBehaviour, IEnemyController
 
     public void ChangeState(IEnemyState newState)
     {
+        EventBus.Instance.Publish(new EnemyControllerChangedStateEvent(newState));
         _currentState?.OnStateExit(this);
         _currentState = newState;
         _currentState.OnStateEnter(this);
