@@ -30,23 +30,26 @@ public class EnemyFactory : Singleton<EnemyFactory>
             return null;
         }
 
-        var newEnemyGameObject = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
-        var newEnemyController = newEnemyGameObject.GetComponent<EnemyController>();
+        GameObject newEnemyGameObject = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+        EnemyController newEnemyController = newEnemyGameObject.GetComponent<EnemyController>();
 
         if (newEnemyController == null)
         {
             newEnemyController = newEnemyGameObject.AddComponent<EnemyController>();
         }
 
-        // hard-coded path index for now
-        AssignPathToEnemy(newEnemyController, 0);
+        Enemy createdEnemy = new Enemy(newEnemyController);
+        createdEnemy.Controller.ParentEnemy = createdEnemy;
 
-        return new Enemy(newEnemyController);
+        // hard-coded path index for now
+        AssignPathToEnemy(createdEnemy, 0);
+
+        return createdEnemy;
     }
 
-    private void AssignPathToEnemy(EnemyController enemyController, int pathIndex)
+    private void AssignPathToEnemy(Enemy enemy, int pathIndex)
     {
         var path = PathManager.Instance.GetPath(pathIndex);
-        enemyController.SetPath(path);
+        enemy.Controller.SetPath(path);
     }
 }

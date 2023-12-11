@@ -15,14 +15,22 @@ public class EnemyManager : Singleton<EnemyManager>
 
     void OnEnable()
     {
+        //listen for enemy factory spawning
+        EventBus.Instance.Subscribe<EnemyFactoryEnemySpawnedEvent>(HandleEnemySpawned);
         EventBus.Instance.Subscribe<EnemyControllerReachedFinalWaypointEvent>(HandleEnemyReachedFinalWaypoint);
         EventBus.Instance.Subscribe<EnemyControllerEnemyDeathEvent>(HandleEnemyDeath);
     }
 
     void OnDisable()
     {
+        EventBus.Instance.Unsubscribe<EnemyFactoryEnemySpawnedEvent>(HandleEnemySpawned);
         EventBus.Instance.Unsubscribe<EnemyControllerReachedFinalWaypointEvent>(HandleEnemyReachedFinalWaypoint);
         EventBus.Instance.Unsubscribe<EnemyControllerEnemyDeathEvent>(HandleEnemyDeath);
+    }
+
+    private void HandleEnemySpawned(EnemyFactoryEnemySpawnedEvent inputEvent)
+    {
+        RegisterEnemy(inputEvent.Enemy);
     }
 
     private void RegisterEnemy(Enemy enemy)
@@ -32,17 +40,19 @@ public class EnemyManager : Singleton<EnemyManager>
 
     private void HandleEnemyReachedFinalWaypoint(EnemyControllerReachedFinalWaypointEvent inputEvent)
     {
-        // UnregisterEnemy(inputEvent.EnemyController);
+        UnregisterEnemy(inputEvent.EnemyController.ParentEnemy);
     }
 
     private void HandleEnemyDeath(EnemyControllerEnemyDeathEvent inputEvent)
     {
-        // UnregisterEnemy(inputEvent.EnemyController);
+        UnregisterEnemy(inputEvent.EnemyController.ParentEnemy);
     }
 
     private void UnregisterEnemy(Enemy enemy)
     {
+        Debug.Log("Unregistering enemy");
         activeEnemies.Remove(enemy);
+        Debug.Log("Active enemies: " + activeEnemies.Count);
 
         if (activeEnemies.Count == 0)
         {

@@ -9,6 +9,8 @@ public class EnemyController : MonoBehaviour, IEnemyController
     private int currentWaypointIndex = 0;
     private float movementSpeed = 5.0f;
     private IEnemyState _currentState;
+    //Enemy for this controller
+    public Enemy ParentEnemy { get; set; }
 
     void Awake()
     {
