@@ -1,11 +1,11 @@
 public class Enemy
 {
     public EnemyController Controller { get; private set; }
+    public EnemyAnimator Animator { get; private set; }
 
-    // Add other components as needed
-
-    public Enemy(EnemyController controller)
+    public Enemy(EnemyController controller, EnemyAnimator animator)
     {
         Controller = controller;
+        Animator = animator;
     }
 }

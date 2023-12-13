@@ -32,13 +32,21 @@ public class EnemyFactory : Singleton<EnemyFactory>
 
         GameObject newEnemyGameObject = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
         EnemyController newEnemyController = newEnemyGameObject.GetComponent<EnemyController>();
+        EnemyAnimator newEnemyAnimator = newEnemyGameObject.GetComponent<EnemyAnimator>();
+
 
         if (newEnemyController == null)
         {
             newEnemyController = newEnemyGameObject.AddComponent<EnemyController>();
         }
 
-        Enemy createdEnemy = new Enemy(newEnemyController);
+        if (newEnemyAnimator == null)
+        {
+            newEnemyAnimator = newEnemyGameObject.AddComponent<EnemyAnimator>();
+            newEnemyAnimator.SetController(newEnemyController);
+        }
+
+        Enemy createdEnemy = new Enemy(newEnemyController, newEnemyAnimator);
         createdEnemy.Controller.ParentEnemy = createdEnemy;
 
         // hard-coded path index for now

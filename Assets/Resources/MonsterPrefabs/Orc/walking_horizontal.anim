@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: walk_right
+  m_Name: walking_horizontal
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -23,13 +23,13 @@ AnimationClip:
     - time: 0
       value: {fileID: 4944230376442633554, guid: 1f9dead4bc69729408588d5a3a5bc020,
         type: 3}
-    - time: 0.33333334
+    - time: 0.083333336
       value: {fileID: -2274363484027164459, guid: 1f9dead4bc69729408588d5a3a5bc020,
         type: 3}
-    - time: 0.65
+    - time: 0.16666667
       value: {fileID: 8284087734974297348, guid: 1f9dead4bc69729408588d5a3a5bc020,
         type: 3}
-    - time: 0.98333335
+    - time: 0.25
       value: {fileID: 5304202850863732263, guid: 1f9dead4bc69729408588d5a3a5bc020,
         type: 3}
     attribute: m_Sprite
@@ -37,7 +37,7 @@ AnimationClip:
     classID: 212
     script: {fileID: 0}
     flags: 2
-  m_SampleRate: 60
+  m_SampleRate: 12
   m_WrapMode: 0
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -63,7 +63,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 1
+    m_StopTime: 0.33333334
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0

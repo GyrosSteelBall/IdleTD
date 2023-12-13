@@ -7,7 +7,8 @@ public class EnemyController : MonoBehaviour, IEnemyController
     private EnemyData enemyData;
     private List<Vector3> currentPath;
     private int currentWaypointIndex = 0;
-    private float movementSpeed = 5.0f;
+    private float movementSpeed = 4.0f;
+    private string lastDirection = null;
     private IEnemyState _currentState;
     //Enemy for this controller
     public Enemy ParentEnemy { get; set; }
@@ -71,7 +72,26 @@ public class EnemyController : MonoBehaviour, IEnemyController
             return;
         }
 
-        MoveTowards(currentPath[currentWaypointIndex]);
+        Vector3 target = currentPath[currentWaypointIndex];
+        Vector3 directionVector = (target - transform.position).normalized;
+
+        string direction;
+        if (Mathf.Abs(directionVector.x) > Mathf.Abs(directionVector.y))
+        {
+            direction = directionVector.x > 0 ? "right" : "left";
+        }
+        else
+        {
+            direction = directionVector.y > 0 ? "up" : "down";
+        }
+
+        if (direction != lastDirection)
+        {
+            EventBus.Instance.Publish(new EnemyControllerMovementDirectionChangedEvent(this, direction));
+            lastDirection = direction;
+        }
+
+        MoveTowards(target);
 
         if (Vector3.Distance(transform.position, currentPath[currentWaypointIndex]) < 0.1f)
         {
