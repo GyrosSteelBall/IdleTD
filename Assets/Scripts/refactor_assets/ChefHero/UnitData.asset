@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60f7db25cc58aef409d9cd1cfb10b39e, type: 3}
+  m_Name: UnitData
+  m_EditorClassIdentifier: 
+  unitName: TestUnit
+  baseMaxHealth: 100
+  baseAttackDamage: 40
+  baseAbilityPower: 0
+  baseArmor: 15
+  baseMagicResist: 15
+  baseAttackSpeed: 0.5
+  baseAttackRange: 3
+  baseMaxMana: 100
+  unitSprite: {fileID: 21300000, guid: 5f02e0b672569fa459b6b88ed74ed5d7, type: 2}
+  unitPrefab: {fileID: 4707598915543346905, guid: de89954c5a9d50649baaf5ef10f60e2c,
+    type: 3}
