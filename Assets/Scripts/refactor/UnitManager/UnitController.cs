@@ -28,6 +28,12 @@ public class UnitController : MonoBehaviour
         currentState = newState;
         currentState.Enter();
     }
+
+    public void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, Unit.AttackRange);
+    }
 }
 
 public interface IUnitState

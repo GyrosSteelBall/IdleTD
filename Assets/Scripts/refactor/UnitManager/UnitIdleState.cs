@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class UnitIdleState : IUnitState
 {
     private UnitController emitter;
@@ -14,8 +16,8 @@ public class UnitIdleState : IUnitState
 
     public void Update()
     {
-        // Code to execute on each update while in the idle state
-        // For example, you might want to check if there are any enemies in range, and if so, transition to the attacking state
+        // Check if enemies are in range circle
+        // If so, change state to attack
     }
 
     public void Exit()
