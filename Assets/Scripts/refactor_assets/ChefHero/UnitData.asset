@@ -19,7 +19,7 @@ MonoBehaviour:
   baseArmor: 15
   baseMagicResist: 15
   baseAttackSpeed: 0.5
-  baseAttackRange: 3
+  baseAttackRange: 1
   baseMaxMana: 100
   unitSprite: {fileID: 21300000, guid: 5f02e0b672569fa459b6b88ed74ed5d7, type: 2}
   unitPrefab: {fileID: 4707598915543346905, guid: de89954c5a9d50649baaf5ef10f60e2c,

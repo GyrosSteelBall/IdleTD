@@ -31,7 +31,14 @@ public class UnitController : MonoBehaviour
 
     public void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
+        if (currentState is UnitCombatState)
+        {
+            Gizmos.color = Color.green;
+        }
+        else
+        {
+            Gizmos.color = Color.red;
+        }
         Gizmos.DrawWireSphere(transform.position, Unit.AttackRange);
     }
 }
