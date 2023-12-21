@@ -71,6 +71,40 @@ public class EnemyController : MonoBehaviour, IEnemyController
         Debug.Log(damage);
     }
 
+    public bool IsUnitInFront(float detectionDistance)
+    {
+        // Convert lastDirection string to Vector2
+        Vector2 direction = new Vector2(0, 0);
+        if (lastDirection == "up")
+        {
+            direction = Vector2.up;
+        }
+        else if (lastDirection == "down")
+        {
+            direction = Vector2.down;
+        }
+        else if (lastDirection == "left")
+        {
+            direction = Vector2.left;
+        }
+        else if (lastDirection == "right")
+        {
+            direction = Vector2.right;
+        }
+
+        // Cast a ray in the direction the enemy is moving
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, detectionDistance);
+
+        // If the ray hit a Unit, return true
+        if (hit.collider != null && hit.collider.gameObject.CompareTag("Unit"))
+        {
+            return true;
+        }
+
+        // Otherwise, return false
+        return false;
+    }
+
     public void Die()
     {
         EventBus.Instance.Publish(new EnemyControllerEnemyDeathEvent(this));
@@ -81,6 +115,13 @@ public class EnemyController : MonoBehaviour, IEnemyController
         if (currentPath == null || currentPath.Count == 0)
         {
             Debug.Log("No path assigned.");
+            return;
+        }
+
+        //Detection distance of 1 for melee blockers
+        if (IsUnitInFront(1))
+        {
+            // Stop moving if there's a Unit in front
             return;
         }
 
