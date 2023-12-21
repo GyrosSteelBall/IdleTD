@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class UnitCombatState : IUnitState
 {
-    private UnitController emitter;
+    private UnitController unitController;
     private EnemyController target;
 
     public UnitCombatState(UnitController unit, EnemyController target)
     {
-        this.emitter = unit;
+        this.unitController = unit;
         this.target = target;
     }
 
@@ -27,12 +27,12 @@ public class UnitCombatState : IUnitState
         foreach (var enemy in enemies)
         {
             // Calculate the distance between the unit and the enemy in the XY plane
-            Vector2 unitPosition = new Vector2(emitter.transform.position.x, emitter.transform.position.y);
+            Vector2 unitPosition = new Vector2(unitController.transform.position.x, unitController.transform.position.y);
             Vector2 enemyPosition = new Vector2(enemy.transform.position.x, enemy.transform.position.y);
             float distance = Vector2.Distance(unitPosition, enemyPosition);
 
             // If the enemy is within attack range, set the enemy as the target
-            if (distance <= emitter.Unit.AttackRange)
+            if (distance <= unitController.Unit.AttackRange)
             {
                 target = enemy;
                 break;
@@ -42,12 +42,12 @@ public class UnitCombatState : IUnitState
         // If there is a target, attack the target
         if (target != null)
         {
-            // emitter.Attack(target);
+            unitController.Attack(target);
         }
         else
         {
             // If there is no target, change the state back to idle
-            emitter.ChangeState(new UnitIdleState(emitter));
+            unitController.ChangeState(new UnitIdleState(unitController));
         }
     }
 

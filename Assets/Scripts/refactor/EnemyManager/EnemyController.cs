@@ -18,6 +18,24 @@ public class EnemyController : MonoBehaviour, IEnemyController
         ChangeState(new EnemyMovingState());
     }
 
+    void OnEnable()
+    {
+        EventBus.Instance.Subscribe<CombatSystemApplyDamageToEnemyEvent>(HandleApplyDamageToEnemyEvent);
+    }
+
+    void OnDisable()
+    {
+        EventBus.Instance.Unsubscribe<CombatSystemApplyDamageToEnemyEvent>(HandleApplyDamageToEnemyEvent);
+    }
+
+    private void HandleApplyDamageToEnemyEvent(CombatSystemApplyDamageToEnemyEvent damageEvent)
+    {
+        if (damageEvent.Target == this)
+        {
+            TakeDamage(damageEvent.Damage);
+        }
+    }
+
     public void ChangeState(IEnemyState newState)
     {
         EventBus.Instance.Publish(new EnemyControllerChangedStateEvent(newState));
@@ -50,6 +68,7 @@ public class EnemyController : MonoBehaviour, IEnemyController
     public void TakeDamage(float damage)
     {
         // Reduce health and possibly trigger death
+        Debug.Log(damage);
     }
 
     public void Die()

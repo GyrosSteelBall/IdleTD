@@ -41,6 +41,12 @@ public class UnitController : MonoBehaviour
         }
         Gizmos.DrawWireSphere(transform.position, Unit.AttackRange);
     }
+
+    public void Attack(EnemyController enemy)
+    {
+        float damage = Unit.AttackDamage;
+        EventBus.Instance.Publish(new UnitControllerAttackEvent(this, enemy, damage));
+    }
 }
 
 public interface IUnitState
