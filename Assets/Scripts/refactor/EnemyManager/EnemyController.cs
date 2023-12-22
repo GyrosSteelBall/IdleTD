@@ -4,14 +4,25 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour, IEnemyController
 {
-    private EnemyData enemyData;
     private List<Vector3> currentPath;
     private int currentWaypointIndex = 0;
-    private float movementSpeed = 4.0f;
     private string lastDirection = null;
     private IEnemyState _currentState;
     //Enemy for this controller
     public Enemy ParentEnemy { get; set; }
+    public int AttackDamage { get; set; }
+    public int AbilityPower { get; set; }
+    public int Armor { get; set; }
+    public int MagicResist { get; set; }
+    public float AttackSpeed { get; set; }
+    public float AttackRange { get; set; }
+    public int MaxHealth { get; set; }
+    public int CurrentHealth { get; set; }
+    public int MaxMana { get; set; }
+    public int CurrentMana { get; set; }
+    public Sprite EnemySprite { get; set; }
+    public float MovementSpeed { get; set; }
+    public string EnemyName { get; set; }
 
     void Awake()
     {
@@ -26,6 +37,21 @@ public class EnemyController : MonoBehaviour, IEnemyController
     void OnDisable()
     {
         EventBus.Instance.Unsubscribe<CombatSystemApplyDamageToEnemyEvent>(HandleApplyDamageToEnemyEvent);
+    }
+
+    public void Initialize(EnemyDataSO data)
+    {
+        EnemyName = data.enemyName;
+        MaxHealth = data.baseMaxHealth;
+        AttackDamage = data.baseAttackDamage;
+        AbilityPower = data.baseAbilityPower;
+        Armor = data.baseArmor;
+        MagicResist = data.baseMagicResist;
+        AttackSpeed = data.baseAttackSpeed;
+        AttackRange = data.baseAttackRange;
+        MaxMana = data.baseMaxMana;
+        EnemySprite = data.enemySprite;
+        MovementSpeed = data.baseMovementSpeed;
     }
 
     private void HandleApplyDamageToEnemyEvent(CombatSystemApplyDamageToEnemyEvent damageEvent)
@@ -49,12 +75,6 @@ public class EnemyController : MonoBehaviour, IEnemyController
         currentPath = path;
     }
 
-    public void Initialize(EnemyData data)
-    {
-        enemyData = data;
-        // Initialize logic-specific properties based on EnemyData
-    }
-
     void Update()
     {
         _currentState?.Update(this);
@@ -62,7 +82,7 @@ public class EnemyController : MonoBehaviour, IEnemyController
 
     private void MoveTowards(Vector3 target)
     {
-        transform.position = Vector3.MoveTowards(transform.position, target, movementSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, target, MovementSpeed * Time.deltaTime);
     }
 
     public void TakeDamage(float damage)
@@ -98,11 +118,17 @@ public class EnemyController : MonoBehaviour, IEnemyController
         // If the ray hit a Unit, return true
         if (hit.collider != null && hit.collider.gameObject.CompareTag("Unit"))
         {
+            Attack(hit.collider.gameObject.GetComponent<UnitController>());
             return true;
         }
 
         // Otherwise, return false
         return false;
+    }
+
+    public void Attack(UnitController target)
+    {
+        EventBus.Instance.Publish(new EnemyControllerAttackEvent(this, target, AttackDamage));
     }
 
     public void Die()

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c1be9bce9b6244bafa600c76fbbce0, type: 3}
   m_Name: Test Enemy Spawn Info
   m_EditorClassIdentifier: 
-  enemyData: {fileID: 11400000, guid: a9e268ac7a51d3e439d26899feb23951, type: 2}
+  enemyData: {fileID: 11400000, guid: abac5931585e5734896eb8634be74916, type: 2}
   count: 10

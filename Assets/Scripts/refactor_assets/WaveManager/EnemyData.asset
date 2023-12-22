@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f75095daccb7c8b4f81c159a2fbb058c, type: 3}
+  m_Name: EnemyData
+  m_EditorClassIdentifier: 
+  enemyName: Orc
+  baseMaxHealth: 100
+  baseAttackDamage: 10
+  baseAbilityPower: 0
+  baseArmor: 0
+  baseMagicResist: 0
+  baseAttackSpeed: 1
+  baseAttackRange: 1
+  baseMaxMana: 0
+  enemySprite: {fileID: -7763475090823894447, guid: da6baafb8ce1b7c4fb42e126c3bcb340,
+    type: 3}
+  enemyPrefab: {fileID: 7662546760087537391, guid: 67cf28029e4ba1749a80e020fcfb3f13,
+    type: 3}
+  baseMovementSpeed: 3

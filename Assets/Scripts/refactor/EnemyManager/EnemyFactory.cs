@@ -21,9 +21,9 @@ public class EnemyFactory : Singleton<EnemyFactory>
         }
     }
 
-    public Enemy CreateEnemy(EnemyData enemyData, Vector3 spawnPosition)
+    public Enemy CreateEnemy(EnemyDataSO enemyData, Vector3 spawnPosition)
     {
-        var enemyPrefab = enemyData.EnemyPrefab;
+        var enemyPrefab = enemyData.enemyPrefab;
         if (enemyPrefab == null)
         {
             Debug.LogError("Enemy prefab is missing for the given EnemyData object.");
@@ -46,6 +46,7 @@ public class EnemyFactory : Singleton<EnemyFactory>
             newEnemyAnimator.SetController(newEnemyController);
         }
 
+        newEnemyController.Initialize(enemyData);
         Enemy createdEnemy = new Enemy(newEnemyController, newEnemyAnimator);
         createdEnemy.Controller.ParentEnemy = createdEnemy;
 
