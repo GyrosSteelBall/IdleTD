@@ -119,7 +119,7 @@ public class EnemyController : MonoBehaviour, IEnemyController
         }
 
         //Detection distance of 1 for melee blockers
-        if (IsUnitInFront(1))
+        if (IsUnitInFront(0.5f))
         {
             // Stop moving if there's a Unit in front
             return;

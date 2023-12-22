@@ -43,6 +43,11 @@ public class UnitCombatState : IUnitState
         if (target != null)
         {
             unitController.Attack(target);
+            // Change the direction the unit is facing
+            Vector3 directionVector = (target.transform.position - unitController.transform.position).normalized;
+            string direction;
+            direction = directionVector.x > 0 ? "right" : "left";
+            EventBus.Instance.Publish(new UnitControllerChangeLookDirectionEvent(unitController, direction));
         }
         else
         {

@@ -13,11 +13,25 @@ public class UnitAnimator : MonoBehaviour
     void OnEnable()
     {
         EventBus.Instance.Subscribe<UnitControllerIdleStateEvent>(OnUnitControllerIdleStateEvent);
+        EventBus.Instance.Subscribe<UnitControllerChangeLookDirectionEvent>(OnUnitControllerChangeLookDirectionEvent);
     }
 
     void OnDisable()
     {
         EventBus.Instance.Unsubscribe<UnitControllerIdleStateEvent>(OnUnitControllerIdleStateEvent);
+        EventBus.Instance.Unsubscribe<UnitControllerChangeLookDirectionEvent>(OnUnitControllerChangeLookDirectionEvent);
+    }
+
+    private void OnUnitControllerChangeLookDirectionEvent(UnitControllerChangeLookDirectionEvent lookDirectionEvent)
+    {
+        if (lookDirectionEvent.Emitter != Controller)
+        {
+            return;
+        }
+
+        //Just flip the sprite for now
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.flipX = lookDirectionEvent.LookDirection == "left";
     }
 
     private void OnUnitControllerIdleStateEvent(UnitControllerIdleStateEvent idleStateEvent)
