@@ -17,7 +17,7 @@ public class CombatSystem : Singleton<CombatSystem>
     private void HandleEnemyAttack(EnemyControllerAttackEvent attackEvent)
     {
         // Calculate actual damage here. For now, let's just pass through the raw damage.
-        float actualDamage = attackEvent.RawDamage;
+        int actualDamage = attackEvent.RawDamage;
 
         EventBus.Instance.Publish(new CombatSystemApplyDamageToUnitEvent(attackEvent.Target, actualDamage));
     }
@@ -25,7 +25,7 @@ public class CombatSystem : Singleton<CombatSystem>
     private void HandleUnitAttack(UnitControllerAttackEvent attackEvent)
     {
         // Calculate actual damage here. For now, let's just pass through the raw damage.
-        float actualDamage = attackEvent.RawDamage;
+        int actualDamage = attackEvent.RawDamage;
 
         EventBus.Instance.Publish(new CombatSystemApplyDamageToEnemyEvent(attackEvent.Target, actualDamage));
     }

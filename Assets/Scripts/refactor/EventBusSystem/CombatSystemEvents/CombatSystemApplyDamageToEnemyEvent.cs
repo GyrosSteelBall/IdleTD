@@ -1,9 +1,9 @@
 public class CombatSystemApplyDamageToEnemyEvent
 {
     public EnemyController Target { get; set; }
-    public float Damage { get; set; }
+    public int Damage { get; set; }
 
-    public CombatSystemApplyDamageToEnemyEvent(EnemyController target, float damage)
+    public CombatSystemApplyDamageToEnemyEvent(EnemyController target, int damage)
     {
         Target = target;
         Damage = damage;

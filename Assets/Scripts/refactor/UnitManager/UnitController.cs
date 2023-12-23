@@ -5,6 +5,33 @@ public class UnitController : MonoBehaviour
     private IUnitState currentState;
     public IUnit Unit { get; private set; }
 
+    void OnEnable()
+    {
+        EventBus.Instance.Subscribe<CombatSystemApplyDamageToUnitEvent>(HandleApplyDamageToUnitEvent);
+    }
+
+    void OnDisable()
+    {
+        EventBus.Instance.Unsubscribe<CombatSystemApplyDamageToUnitEvent>(HandleApplyDamageToUnitEvent);
+    }
+
+    private void HandleApplyDamageToUnitEvent(CombatSystemApplyDamageToUnitEvent damageEvent)
+    {
+        if (damageEvent.Target == this)
+        {
+            TakeDamage(damageEvent.Damage);
+        }
+    }
+
+    private void TakeDamage(int damage)
+    {
+        Unit.CurrentHealth -= damage;
+        if (Unit.CurrentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     public void Initialize(IUnit unit)
     {
         Unit = unit;
@@ -44,7 +71,7 @@ public class UnitController : MonoBehaviour
 
     public void Attack(EnemyController enemy)
     {
-        float damage = Unit.AttackDamage;
+        int damage = Unit.AttackDamage;
         EventBus.Instance.Publish(new UnitControllerAttackEvent(this, enemy, damage));
     }
 }

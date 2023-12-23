@@ -10,23 +10,41 @@ public class EnemyController : MonoBehaviour, IEnemyController
     private IEnemyState _currentState;
     //Enemy for this controller
     public Enemy ParentEnemy { get; set; }
-    public int AttackDamage { get; set; }
-    public int AbilityPower { get; set; }
-    public int Armor { get; set; }
-    public int MagicResist { get; set; }
-    public float AttackSpeed { get; set; }
-    public float AttackRange { get; set; }
-    public int MaxHealth { get; set; }
-    public int CurrentHealth { get; set; }
-    public int MaxMana { get; set; }
-    public int CurrentMana { get; set; }
-    public Sprite EnemySprite { get; set; }
-    public float MovementSpeed { get; set; }
-    public string EnemyName { get; set; }
+    [SerializeField]
+    private int AttackDamage;
+    [SerializeField]
+    private int AbilityPower;
+    [SerializeField]
+    private int Armor;
+    [SerializeField]
+    private int MagicResist;
+    [SerializeField]
+    private float AttackSpeed;
+    [SerializeField]
+    private float AttackRange;
+    [SerializeField]
+    private int MaxHealth;
+    [SerializeField]
+    private int CurrentHealth;
+    [SerializeField]
+    private int MaxMana;
+    [SerializeField]
+    private int CurrentMana;
+    [SerializeField]
+    private Sprite EnemySprite;
+    [SerializeField]
+    private float MovementSpeed;
+    [SerializeField]
+    private string EnemyName;
 
     void Awake()
     {
         ChangeState(new EnemyMovingState());
+    }
+
+    public float GetAttackSpeed()
+    {
+        return AttackSpeed;
     }
 
     void OnEnable()
@@ -118,7 +136,7 @@ public class EnemyController : MonoBehaviour, IEnemyController
         // If the ray hit a Unit, return true
         if (hit.collider != null && hit.collider.gameObject.CompareTag("Unit"))
         {
-            Attack(hit.collider.gameObject.GetComponent<UnitController>());
+            ChangeState(new EnemyAttackingState(hit.collider.gameObject.GetComponent<UnitController>()));
             return true;
         }
 
