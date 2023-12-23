@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: UnitData
   m_EditorClassIdentifier: 
   unitName: TestUnit
-  baseMaxHealth: 100
+  baseMaxHealth: 500
   baseAttackDamage: 40
   baseAbilityPower: 0
   baseArmor: 15

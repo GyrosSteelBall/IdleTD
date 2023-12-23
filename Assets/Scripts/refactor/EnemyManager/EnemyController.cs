@@ -106,7 +106,6 @@ public class EnemyController : MonoBehaviour, IEnemyController
     public void TakeDamage(float damage)
     {
         // Reduce health and possibly trigger death
-        Debug.Log(damage);
     }
 
     public bool IsUnitInFront(float detectionDistance)

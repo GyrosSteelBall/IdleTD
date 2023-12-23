@@ -20,6 +20,9 @@ public class Unit : MonoBehaviour, IUnit
     {
         UnitName = unitData.unitName;
         MaxHealth = unitData.baseMaxHealth;
+        CurrentHealth = MaxHealth;
+        MaxMana = unitData.baseMaxMana;
+        CurrentMana = MaxMana;
         AttackDamage = unitData.baseAttackDamage;
         AbilityPower = unitData.baseAbilityPower;
         Armor = unitData.baseArmor;

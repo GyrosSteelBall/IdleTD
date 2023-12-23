@@ -25,11 +25,19 @@ public class UnitController : MonoBehaviour
 
     private void TakeDamage(int damage)
     {
+        Debug.Log($"{Unit.UnitName} Current health: {Unit.CurrentHealth}");
         Unit.CurrentHealth -= damage;
+        Debug.Log($"{Unit.UnitName} took {damage} damage. Current health: {Unit.CurrentHealth}");
         if (Unit.CurrentHealth <= 0)
         {
-            Destroy(gameObject);
+            Die(this);
         }
+    }
+
+    private void Die(UnitController unitController)
+    {
+        EventBus.Instance.Publish(new UnitControllerDeathEvent(unitController));
+        Destroy(gameObject);
     }
 
     public void Initialize(IUnit unit)
