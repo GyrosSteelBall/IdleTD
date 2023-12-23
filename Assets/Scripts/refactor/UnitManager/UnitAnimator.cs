@@ -1,9 +1,13 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class UnitAnimator : MonoBehaviour
 {
     public UnitController Controller { get; private set; }
+    //Maybe move into a separate class
+    private static Material DefaultMaterial;
+    private static Material BlinkMaterial;
 
     public void Initialize(UnitController controller)
     {
@@ -13,13 +17,38 @@ public class UnitAnimator : MonoBehaviour
     void OnEnable()
     {
         EventBus.Instance.Subscribe<UnitControllerIdleStateEvent>(OnUnitControllerIdleStateEvent);
+        EventBus.Instance.Subscribe<UnitControllerTakeDamageEvent>(OnUnitControllerTakeDamageEvent);
         EventBus.Instance.Subscribe<UnitControllerChangeLookDirectionEvent>(OnUnitControllerChangeLookDirectionEvent);
     }
 
     void OnDisable()
     {
         EventBus.Instance.Unsubscribe<UnitControllerIdleStateEvent>(OnUnitControllerIdleStateEvent);
+        EventBus.Instance.Unsubscribe<UnitControllerTakeDamageEvent>(OnUnitControllerTakeDamageEvent);
         EventBus.Instance.Unsubscribe<UnitControllerChangeLookDirectionEvent>(OnUnitControllerChangeLookDirectionEvent);
+    }
+
+    private void OnUnitControllerTakeDamageEvent(UnitControllerTakeDamageEvent takeDamageEvent)
+    {
+        if (takeDamageEvent.Emitter != Controller)
+        {
+            return;
+        }
+
+        Renderer renderer = GetComponent<Renderer>();
+        if (DefaultMaterial == null) DefaultMaterial = renderer.material;
+        if (BlinkMaterial == null) BlinkMaterial = new Material(Shader.Find("GUI/Text Shader"));
+
+        StartCoroutine(BlinkCoroutine(renderer));
+    }
+
+    private IEnumerator BlinkCoroutine(Renderer renderer)
+    {
+        renderer.material = BlinkMaterial;
+
+        yield return new WaitForSeconds(0.1f);
+
+        renderer.material = DefaultMaterial;
     }
 
     private void OnUnitControllerChangeLookDirectionEvent(UnitControllerChangeLookDirectionEvent lookDirectionEvent)

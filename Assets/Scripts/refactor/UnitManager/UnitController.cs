@@ -25,9 +25,8 @@ public class UnitController : MonoBehaviour
 
     private void TakeDamage(int damage)
     {
-        Debug.Log($"{Unit.UnitName} Current health: {Unit.CurrentHealth}");
+        EventBus.Instance.Publish(new UnitControllerTakeDamageEvent(this, damage));
         Unit.CurrentHealth -= damage;
-        Debug.Log($"{Unit.UnitName} took {damage} damage. Current health: {Unit.CurrentHealth}");
         if (Unit.CurrentHealth <= 0)
         {
             Die(this);
