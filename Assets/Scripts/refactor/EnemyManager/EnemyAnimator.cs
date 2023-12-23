@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+// TODO: refactor this to not get animator component every time
 public class EnemyAnimator : MonoBehaviour
 {
     public EnemyController Controller { get; private set; }
@@ -8,11 +9,44 @@ public class EnemyAnimator : MonoBehaviour
     void OnEnable()
     {
         EventBus.Instance.Subscribe<EnemyControllerMovementDirectionChangedEvent>(HandleMoving);
+        EventBus.Instance.Subscribe<EnemyControllerAttackEvent>(HandleAttack);
+        EventBus.Instance.Subscribe<EnemyControllerStateChangedEvent>(HandleStateChanged);
     }
 
     void OnDisable()
     {
         EventBus.Instance.Unsubscribe<EnemyControllerMovementDirectionChangedEvent>(HandleMoving);
+        EventBus.Instance.Unsubscribe<EnemyControllerAttackEvent>(HandleAttack);
+        EventBus.Instance.Unsubscribe<EnemyControllerStateChangedEvent>(HandleStateChanged);
+    }
+
+    private void HandleStateChanged(EnemyControllerStateChangedEvent stateChangedEvent)
+    {
+        if (stateChangedEvent.Emitter != Controller)
+        {
+            return;
+        }
+        IEnemyState state = stateChangedEvent.NewState;
+        Animator animator = GetComponent<Animator>();
+        if (state is EnemyAttackingState)
+        {
+            animator.SetBool("Moving", false);
+        }
+        else if (state is EnemyMovingState)
+        {
+            animator.SetBool("Moving", true);
+        }
+    }
+
+    private void HandleAttack(EnemyControllerAttackEvent attackEvent)
+    {
+        if (attackEvent.Attacker != Controller)
+        {
+            return;
+        }
+
+        Animator animator = GetComponent<Animator>();
+        animator.SetTrigger("Attack");
     }
 
     public void SetController(EnemyController controller)
@@ -26,7 +60,6 @@ public class EnemyAnimator : MonoBehaviour
         {
             return;
         }
-
         string direction = movingEvent.Direction;
         Animator animator = GetComponent<Animator>();
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>(); // Get the SpriteRenderer component
@@ -55,10 +88,6 @@ public class EnemyAnimator : MonoBehaviour
             animator.SetFloat("MoveX", 1);
             animator.SetFloat("MoveY", 0);
             spriteRenderer.flipX = false; // Don't flip the sprite when moving right
-        }
-        else
-        {
-            animator.SetBool("Moving", false);
         }
     }
 

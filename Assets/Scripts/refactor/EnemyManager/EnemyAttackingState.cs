@@ -12,7 +12,7 @@ public class EnemyAttackingState : IEnemyState
 
     public void OnStateEnter(EnemyController enemyController)
     {
-        // Initialize attacking state (e.g., play attack animation)
+        EventBus.Instance.Publish(new EnemyControllerStateChangedEvent(enemyController, this));
     }
 
     public void Update(EnemyController enemyController)
