@@ -178,7 +178,6 @@ public class EnemyController : MonoBehaviour, IEnemyController
         if (currentWaypointIndex >= currentPath.Count)
         {
             EventBus.Instance.Publish(new EnemyControllerReachedFinalWaypointEvent(this));
-            Destroy(gameObject);
             return;
         }
 

@@ -41,11 +41,13 @@ public class EnemyManager : Singleton<EnemyManager>
     private void HandleEnemyReachedFinalWaypoint(EnemyControllerReachedFinalWaypointEvent inputEvent)
     {
         UnregisterEnemy(inputEvent.EnemyController.ParentEnemy);
+        Destroy(inputEvent.EnemyController.gameObject);
     }
 
     private void HandleEnemyDeath(EnemyControllerEnemyDeathEvent inputEvent)
     {
         UnregisterEnemy(inputEvent.EnemyController.ParentEnemy);
+        // Destruction of the enemy is handled by the animator
     }
 
     private void UnregisterEnemy(Enemy enemy)

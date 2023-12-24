@@ -15,9 +15,9 @@ public class UnitManager : Singleton<UnitManager>
     public void AddUnit(UnitDataSO unitData)
     {
         //hard coded for now
-        Units.Add(UnitFactory.CreateUnit(unitData, new Vector3(-4.63f, -3.05f, 6.47f)));
+        Units.Add(UnitFactory.CreateUnit(unitData, new Vector3(-4.63f, -3.05f, -1f)));
         //Second unit for testing
-        Units.Add(UnitFactory.CreateUnit(unitData, new Vector3(-4.63f, -1.05f, 6.47f)));
+        Units.Add(UnitFactory.CreateUnit(unitData, new Vector3(-4.63f, -1.05f, -1f)));
     }
 
     public void RemoveUnit(GameObject unit)
