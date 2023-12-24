@@ -209,5 +209,10 @@ public class EnemyController : MonoBehaviour, IEnemyController
         }
     }
 
+    public int GetCurrentHealth()
+    {
+        return CurrentHealth;
+    }
+
     // Other methods like moving, attacking, etc.
 }

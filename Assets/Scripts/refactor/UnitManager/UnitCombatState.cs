@@ -20,24 +20,28 @@ public class UnitCombatState : IUnitState
 
     public void Update()
     {
-        // Get all enemies in the scene
-        EnemyController[] enemies = GameObject.FindObjectsOfType<EnemyController>();
-
-        // Reset the target
-        this.target = null;
-
-        foreach (var enemy in enemies)
+        // Only search for a new target if the current target is null or dead
+        if (target == null || target.GetCurrentHealth() <= 0)
         {
-            // Calculate the distance between the unit and the enemy in the XY plane
-            Vector2 unitPosition = new Vector2(unitController.transform.position.x, unitController.transform.position.y);
-            Vector2 enemyPosition = new Vector2(enemy.transform.position.x, enemy.transform.position.y);
-            float distance = Vector2.Distance(unitPosition, enemyPosition);
+            // Get all enemies in the scene
+            EnemyController[] enemies = GameObject.FindObjectsOfType<EnemyController>();
 
-            // If the enemy is within attack range, set the enemy as the target
-            if (distance <= unitController.Unit.AttackRange)
+            // Reset the target
+            this.target = null;
+
+            foreach (var enemy in enemies)
             {
-                target = enemy;
-                break;
+                // Calculate the distance between the unit and the enemy in the XY plane
+                Vector2 unitPosition = new Vector2(unitController.transform.position.x, unitController.transform.position.y);
+                Vector2 enemyPosition = new Vector2(enemy.transform.position.x, enemy.transform.position.y);
+                float distance = Vector2.Distance(unitPosition, enemyPosition);
+
+                // If the enemy is within attack range, the enemy is alive, and we have no target, set the target to the enemy
+                if (distance <= unitController.Unit.AttackRange && enemy.GetCurrentHealth() > 0 && target == null)
+                {
+                    target = enemy;
+                    break;
+                }
             }
         }
 
