@@ -103,9 +103,14 @@ public class EnemyController : MonoBehaviour, IEnemyController
         transform.position = Vector3.MoveTowards(transform.position, target, MovementSpeed * Time.deltaTime);
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(int damage)
     {
-        // Reduce health and possibly trigger death
+        EventBus.Instance.Publish(new EnemyControllerTakeDamageEvent(this, damage));
+        CurrentHealth -= damage;
+        if (CurrentHealth <= 0)
+        {
+            Die();
+        }
     }
 
     public bool IsUnitInFront(float detectionDistance)
@@ -135,7 +140,7 @@ public class EnemyController : MonoBehaviour, IEnemyController
         // If the ray hit a Unit, return true
         if (hit.collider != null && hit.collider.gameObject.CompareTag("Unit"))
         {
-            ChangeState(new EnemyAttackingState(hit.collider.gameObject.GetComponent<UnitController>()));
+            ChangeState(new EnemyCombatState(hit.collider.gameObject.GetComponent<UnitController>()));
             return true;
         }
 

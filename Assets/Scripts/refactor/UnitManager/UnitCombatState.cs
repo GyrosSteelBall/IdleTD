@@ -4,11 +4,13 @@ public class UnitCombatState : IUnitState
 {
     private UnitController unitController;
     private EnemyController target;
+    private float nextAttackTime;
 
     public UnitCombatState(UnitController unit, EnemyController target)
     {
         this.unitController = unit;
         this.target = target;
+        nextAttackTime = 0f;
     }
 
     public void Enter()
@@ -42,7 +44,11 @@ public class UnitCombatState : IUnitState
         // If there is a target, attack the target
         if (target != null)
         {
-            unitController.Attack(target);
+            if (Time.time >= nextAttackTime)
+            {
+                unitController.Attack(target);
+                nextAttackTime = Time.time + 1f / unitController.GetAttackSpeed();
+            }
             // Change the direction the unit is facing
             Vector3 directionVector = (target.transform.position - unitController.transform.position).normalized;
             string direction;

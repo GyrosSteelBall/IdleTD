@@ -81,6 +81,11 @@ public class UnitController : MonoBehaviour
         int damage = Unit.AttackDamage;
         EventBus.Instance.Publish(new UnitControllerAttackEvent(this, enemy, damage));
     }
+
+    public float GetAttackSpeed()
+    {
+        return Unit.AttackSpeed;
+    }
 }
 
 public interface IUnitState

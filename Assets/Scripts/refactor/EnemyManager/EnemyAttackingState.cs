@@ -1,11 +1,11 @@
 using UnityEngine;
-public class EnemyAttackingState : IEnemyState
+public class EnemyCombatState : IEnemyState
 {
     private UnitController target;
     private float nextAttackTime;
     private EnemyController enemyController;
 
-    public EnemyAttackingState(UnitController target)
+    public EnemyCombatState(UnitController target)
     {
         this.target = target;
         nextAttackTime = 0f;
