@@ -19,6 +19,7 @@ public class UnitAnimator : MonoBehaviour
         EventBus.Instance.Subscribe<UnitControllerIdleStateEvent>(OnUnitControllerIdleStateEvent);
         EventBus.Instance.Subscribe<UnitControllerTakeDamageEvent>(OnUnitControllerTakeDamageEvent);
         EventBus.Instance.Subscribe<UnitControllerChangeLookDirectionEvent>(OnUnitControllerChangeLookDirectionEvent);
+        EventBus.Instance.Subscribe<UnitControllerAttackEvent>(OnUnitControllerAttackEvent);
     }
 
     void OnDisable()
@@ -26,6 +27,18 @@ public class UnitAnimator : MonoBehaviour
         EventBus.Instance.Unsubscribe<UnitControllerIdleStateEvent>(OnUnitControllerIdleStateEvent);
         EventBus.Instance.Unsubscribe<UnitControllerTakeDamageEvent>(OnUnitControllerTakeDamageEvent);
         EventBus.Instance.Unsubscribe<UnitControllerChangeLookDirectionEvent>(OnUnitControllerChangeLookDirectionEvent);
+        EventBus.Instance.Unsubscribe<UnitControllerAttackEvent>(OnUnitControllerAttackEvent);
+    }
+
+    private void OnUnitControllerAttackEvent(UnitControllerAttackEvent attackEvent)
+    {
+        if (attackEvent.Attacker != Controller)
+        {
+            return;
+        }
+
+        Animator animator = GetComponent<Animator>();
+        animator.SetTrigger("Attack");
     }
 
     private void OnUnitControllerTakeDamageEvent(UnitControllerTakeDamageEvent takeDamageEvent)
