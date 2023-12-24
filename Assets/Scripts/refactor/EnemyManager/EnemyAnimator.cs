@@ -15,6 +15,7 @@ public class EnemyAnimator : MonoBehaviour
         EventBus.Instance.Subscribe<EnemyControllerAttackEvent>(HandleAttack);
         EventBus.Instance.Subscribe<EnemyControllerStateChangedEvent>(HandleStateChanged);
         EventBus.Instance.Subscribe<EnemyControllerTakeDamageEvent>(HandleTakeDamage);
+        EventBus.Instance.Subscribe<EnemyControllerEnemyDeathEvent>(HandleDeath);
     }
 
     void OnDisable()
@@ -23,6 +24,18 @@ public class EnemyAnimator : MonoBehaviour
         EventBus.Instance.Unsubscribe<EnemyControllerAttackEvent>(HandleAttack);
         EventBus.Instance.Unsubscribe<EnemyControllerStateChangedEvent>(HandleStateChanged);
         EventBus.Instance.Unsubscribe<EnemyControllerTakeDamageEvent>(HandleTakeDamage);
+        EventBus.Instance.Unsubscribe<EnemyControllerEnemyDeathEvent>(HandleDeath);
+    }
+
+    private void HandleDeath(EnemyControllerEnemyDeathEvent deathEvent)
+    {
+        if (deathEvent.EnemyController != Controller)
+        {
+            return;
+        }
+
+        Animator animator = GetComponent<Animator>();
+        animator.SetTrigger("Death");
     }
 
     private IEnumerator BlinkCoroutine(Renderer renderer)
