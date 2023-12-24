@@ -70,6 +70,8 @@ public class EnemyController : MonoBehaviour, IEnemyController
         MaxMana = data.baseMaxMana;
         EnemySprite = data.enemySprite;
         MovementSpeed = data.baseMovementSpeed;
+        CurrentHealth = MaxHealth;
+        CurrentMana = MaxMana;
     }
 
     private void HandleApplyDamageToEnemyEvent(CombatSystemApplyDamageToEnemyEvent damageEvent)
