@@ -25,10 +25,10 @@ This Unity-based project demonstrates our skills in game development, software a
    1. [State Machine Pattern Implementation](#state-machine-pattern-implementation)
       - [Implementation Overview](#implementation-overview)
    
-   2. [Event-Driven Architecture](#event-driven-architecture-1)
+   2. [Event-Driven Architecture](#event-driven-architecture)
       - [Implementation Overview](#implementation-overview-1)
    
-   3. [Singleton Pattern Implementation](#singleton-pattern-implementation-1)
+   3. [Singleton Pattern Implementation](#singleton-pattern-implementation)
       - [Implementation Overview](#implementation-overview-2)
 
 ## Key Features
