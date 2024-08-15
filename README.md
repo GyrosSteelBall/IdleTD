@@ -1,6 +1,8 @@
 # Tower Defense Game Project
 This Unity-based project demonstrates our skills in game development, software architecture, and C# programming. Below are the key features and systems implemented in this project. Various architectural refactors were made during the lifetime of this project due to our learnings while building it. The architecture outlined in the README is the most recent state of this project and can be found under branch architecture-refactor-2, however, some non-architecture level features may be found in other branches.
 
+Please note that this is not a finished game, but rather a project made with the intention of sharpening our skills in software engineering. If you wish to test the code yourself, you will have to download and install Unity and clone a branch from this repo into a project.
+
 # Table of Contents
 
 1. [Key Features](#key-features)
