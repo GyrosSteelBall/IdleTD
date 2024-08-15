@@ -14,20 +14,22 @@ This Unity-based project demonstrates our skills in game development, software a
    8. [Advanced Projectile System](#8-advanced-projectile-system)
    9. [State Machine Architecture](#9-state-machine-architecture)
    10. [Event-Driven Architecture](#10-event-driven-architecture)
-   11. [Singleton Pattern Implementation](#11-singleton-pattern-implementation)
+   11. [Singleton Pattern](#11-singleton-pattern)
 
 2. [Technical Highlights](#technical-highlights)
 
 3. [Development Branches](#development-branches)
 
-4. [State Machine Pattern Implementation](#state-machine-pattern-implementation)
-   - [Implementation Overview](#implementation-overview)
+4. [Implementation Details](#implementation-details)
 
-5. [Event-Driven Architecture](#event-driven-architecture-1)
-   - [Implementation Overview](#implementation-overview-1)
-
-6. [Singleton Pattern Implementation](#singleton-pattern-implementation-1)
-   - [Implementation Overview](#implementation-overview-2)
+   1. [State Machine Pattern Implementation](#state-machine-pattern-implementation)
+      - [Implementation Overview](#implementation-overview)
+   
+   2. [Event-Driven Architecture](#event-driven-architecture-1)
+      - [Implementation Overview](#implementation-overview-1)
+   
+   3. [Singleton Pattern Implementation](#singleton-pattern-implementation-1)
+      - [Implementation Overview](#implementation-overview-2)
 
 ## Key Features
 ### 1. Enemy System
@@ -97,7 +99,7 @@ This Unity-based project demonstrates our skills in game development, software a
 * Utilizes an event bus system for decoupled communication between game components
 * Improves modularity and maintainability of the codebase
 
-### 11. Singleton Pattern Implementation
+### 11. Singleton Pattern
 
 * Efficient management of global game systems and managers
 
@@ -112,6 +114,7 @@ This Unity-based project demonstrates our skills in game development, software a
 ### Development Branches
 This project uses a branching strategy to manage feature development. Some features mentioned above may only be available on specific branches as they are still in development. 
 
+# Implementation Details
 ## State Machine Pattern Implementation
 
 This project extensively uses the State Machine pattern to manage game flow, enemy behavior, and unit actions. This design choice offers several benefits:
