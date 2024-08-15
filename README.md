@@ -20,7 +20,7 @@ This Unity-based project demonstrates our skills in game development, software a
 
 3. [Development Branches](#development-branches)
 
-4. [Implementation Details](#implementation-details)
+4. [Architectural Implementation Details](#architectural-implementation-details)
 
    1. [State Machine Pattern Implementation](#state-machine-pattern-implementation)
       - [Implementation Overview](#implementation-overview)
@@ -114,7 +114,7 @@ This Unity-based project demonstrates our skills in game development, software a
 ### Development Branches
 This project uses a branching strategy to manage feature development. Some features mentioned above may only be available on specific branches as they are still in development. 
 
-# Implementation Details
+# Architectural Implementation Details
 ## State Machine Pattern Implementation
 
 This project extensively uses the State Machine pattern to manage game flow, enemy behavior, and unit actions. This design choice offers several benefits:
